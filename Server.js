@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql'); 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+let port = process.env.PORT || 3000;
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -44,7 +45,7 @@ app.post('/login', function(req, res) {
  
 });
 
-app.listen(3000, function(){
+app.listen(port, function(){
   
   console.log("Listening on port 3000!")
 });

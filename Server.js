@@ -33,7 +33,21 @@ app.post('/login', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
- checkClient(req,res);
+  sess = req.session;
+  var user_id = req.body.id;
+  var pass = req.body.pass;
+  var i=0;
+  var flag = 0;
+  console.log("current request: " +req.session.email);
+  for(i=0;i<sessions.length;i++){
+    console.log( " -- " +sessions[i].email );
+    if(req.session && sessions[i].email == req.session.email){
+      res.sendFile(__dirname+ "/Website/index.html");
+      flag=1;
+    }
+  }
+  res.sendFile(__dirname+ "/Website/login.html");
+  console.log("Bad Login");
 });
 app.get('/logout', function(req, res) {
   sess = req.session;

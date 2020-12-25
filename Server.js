@@ -112,7 +112,7 @@ function checkClient(req,res) {
     }
   }
   if(flag == 0){
-    const text = 'SELECT id,name,familyname FROM store."Users" WHERE Email=$1 AND password=$2';
+    const text = 'SELECT id,name,familyname FROM Users WHERE Email=$1 AND password=$2';
     const values = [user_id,pass];
     client.query(text,values, (err, result)=>{
       if (err) throw err;

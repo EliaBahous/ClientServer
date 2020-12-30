@@ -9,13 +9,15 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>Login</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="validation.js"></script>
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -40,15 +42,15 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    <form class="user"  action="/login" method="POST">
+                                    <form class="user" id="userlogin" method="POST" action="/login">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
+                                                id="email" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address..." name="id">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password" name ="pass">
+                                                id="password" placeholder="Password" name ="pass">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -57,21 +59,34 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <input type="submit" value="Login"  class="btn btn-primary btn-user btn-block">
-                                        <hr>
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </a>
+                                        <script>
+                                            if(sessionStorage.getItem("fullname") != ""){
+                                                var xmlHttp = new XMLHttpRequest();
+                                                xmlHttp.open("GET",'/home',false); // false for synchronous request
+                                                xmlHttp.send(null);
+                                                window.location.replace("/home");
+                                            }
+                                            function check(){
+                                                var recaptchaRes =  checkRecaptcha();
+                                                var loginRes = validateLogin();
+                                                if(recaptchaRes == 1 && loginRes == ""){
+                                                    document.getElementById("loginbu").innerHTML= '<button id="loginbutton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
+                                                    document.getElementById("checkbutton").style.visibility = 'hidden'
+                                                }
+                                            }
+                                        </script>
+                                       
+                                        <div class="g-recaptcha" data-callback="enableBtn" data-sitekey="6LdZEOUZAAAAABOhim6Lc8XSEb34nczBkgB2LeOe"></div>
+                                        <span id="loginbu"></span>
                                     </form>
+                                    <button id="checkbutton" class="btn btn-primary btn-user btn-block" onclick="check();" type="submit">Check</button>
+                                    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                        <a  class="small" href="forgetPassword">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
+                                        <a class="small" href="register">Create an Account!</a>
                                     </div>
                                 </div>
                             </div>

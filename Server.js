@@ -17,27 +17,36 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 let port = process.env.PORT || 3000;
 app.listen(port, function(){
-  console.log("Listening on port 3000!");
+  console.log("Listening on port "+port);
 });
 
 
 /************************Functions for request************************/
 
-app.use(express.static('Website'));
-
+app.use(express.static('WebSite'));
 
 app.post('/login', function(req, res) {
   checkClient(req,res);
 });
 
+app.get('/forgetPassword', function(req, res) {
+  res.sendFile(__dirname+ "/Website/forgot-password.html");
+});
+
+app.get('/home', function(req, res) {
+  console.log("HOME-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/index.html");
+});
+
+app.get('/register', function(req, res) {
+  res.sendFile(__dirname+ "/Website/register.html");
+});
 app.get('/login', function(req, res) {
   sess = req.session;
-  var user_id = req.body.id;
-  var pass = req.body.pass;
   var i=0;
   var flag = 0;
-  console.log("current request: " +req.session.email);
-  for(i=0;i<sessions.length;i++){
+  console.log("LOGIN-current request: " +req.session.email);
+  for(i=0;i<sessions.length && flag==0;i++){
     console.log( " -- " +sessions[i].email );
     if(req.session && sessions[i].email == req.session.email){
       res.sendFile(__dirname+ "/Website/index.html");
@@ -45,15 +54,11 @@ app.get('/login', function(req, res) {
     }
   }
   res.sendFile(__dirname+ "/Website/login.html");
-  console.log("Bad Login");
 });
 app.get('/logout', function(req, res) {
-  sess = req.session;
-  var user_id = req.body.id;
-  var pass = req.body.pass;
+  sess = req.session;;
   var i=0;
   var flag = 0;
-
   console.log("current request: " +req.session.email);
   for(i=0;i<sessions.length;i++){
     console.log( " -- " +sessions[i].email );
@@ -72,7 +77,7 @@ function insertClient(req,res){
     if (err) throw err;
     if(result.length > 0){
 
-      res.sendFile(__dirname+ "/Website/index.html");
+      res.sendFile(__dirname+ "/Website/login.html");
       sess.email = req.body.id;
       sess.pass = req.body.pass;
       sess.name = result[0].name;
@@ -86,8 +91,8 @@ function insertClient(req,res){
 app.get('/getdata',function detData(req,res){
   sess = req.session;
   var i=0;
-  var flag = 0;
-  console.log("current request: " +req.session.email);
+  flag=0;
+  console.log("GETDATA-current request: " +req.session.email);
   for(i=0;i<sessions.length && flag == 0;i++){
     console.log( " -- " +sessions[i].email );
     if(req.session && sessions[i].email == req.session.email){
@@ -95,6 +100,7 @@ app.get('/getdata',function detData(req,res){
       flag=1;
     }
   }
+  res.send("");
 });
 
 function checkClient(req,res) {
@@ -103,7 +109,7 @@ function checkClient(req,res) {
   var pass = req.body.pass + '';
   var i=0;
   var flag = 0;
-  console.log("current request: " +req.session.email);
+  console.log("CHECKCLIENT-current request: " +req.session.email);
   for(i=0;i<sessions.length;i++){
     console.log( " -- " +sessions[i].email );
     if(req.session && sessions[i].email == req.session.email){

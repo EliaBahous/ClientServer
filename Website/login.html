@@ -59,7 +59,11 @@
                                                     Me</label>
                                             </div>
                                         </div>
+                                        <span id="invalidData">Check the data</span>
                                         <script>
+                                            document.getElementById("invalidData").style.visibility = 'hidden'
+                                            document.getElementById("invalidData").style.color = 'red'
+
                                             if(sessionStorage.getItem("fullname") != ""){
                                                 var xmlHttp = new XMLHttpRequest();
                                                 xmlHttp.open("GET",'/home',false); // false for synchronous request
@@ -71,15 +75,24 @@
                                                 var loginRes = validateLogin();
                                                 if(recaptchaRes == 1 && loginRes == ""){
                                                     document.getElementById("loginbu").innerHTML= '<button id="loginbutton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
-                                                    document.getElementById("checkbutton").style.visibility = 'hidden'
+                                                    //<button id="checkbutton" class="btn btn-primary btn-user btn-block" onclick="check();" type="submit">Check</button>
+                                                }else{
+                                                    grecaptcha.reset();
+                                                    document.getElementById("invalidData").style.visibility = 'visible'
                                                 }
+            
                                             }
+                                            const params = new URLSearchParams(window.location.search)
+                                             var mode = params.getAll('mode');
+                                             if (mode =="f") {
+                                                document.getElementById("invalidData").style.visibility = 'visible'
+                                            }
+
                                         </script>
                                        
-                                        <div class="g-recaptcha" data-callback="enableBtn" data-sitekey="6LdZEOUZAAAAABOhim6Lc8XSEb34nczBkgB2LeOe"></div>
+                                        <div class="g-recaptcha" data-callback="check"  data-sitekey="6Ld8fx8aAAAAAIOdbuJI-SMesnuuBT-vPFpKplg4"></div>
                                         <span id="loginbu"></span>
                                     </form>
-                                    <button id="checkbutton" class="btn btn-primary btn-user btn-block" onclick="check();" type="submit">Check</button>
                                     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
                                     <hr>
                                     <div class="text-center">

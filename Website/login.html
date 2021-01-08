@@ -71,9 +71,10 @@
                                                 window.location.replace("/home");
                                             }
                                             function check(){
-                                                var recaptchaRes =  checkRecaptcha();
-                                                var loginRes = validateLogin();
-                                                if(recaptchaRes == 1 && loginRes == ""){
+                                                var loginRes = "";
+                                                loginRes +=  checkRecaptcha();
+                                                loginRes += validateLogin();
+                                                if(loginRes == ""){
                                                     document.getElementById("loginbu").innerHTML= '<button id="loginbutton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
                                                     //<button id="checkbutton" class="btn btn-primary btn-user btn-block" onclick="check();" type="submit">Check</button>
                                                 }else{
@@ -83,8 +84,8 @@
             
                                             }
                                             const params = new URLSearchParams(window.location.search)
-                                             var mode = params.getAll('mode');
-                                             if (mode =="f") {
+                                            var mode = params.getAll('mode');
+                                            if (mode =="f") {
                                                 document.getElementById("invalidData").style.visibility = 'visible'
                                             }
 

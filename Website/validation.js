@@ -2,24 +2,30 @@
 function checkRecaptcha() {
   var response = grecaptcha.getResponse();
   if(response.length == 0) { 
-    //reCaptcha not verified
-    alert("You must Check reCaptcha"); 
+  	return "You must Check reCaptcha\n";
   }else{
-	return 1;
+	return "";
   }
 }
 
-// implement on the backend
-// function backend_API_challenge() {
-//     var response = grecaptcha.getResponse();
-//     $.ajax({
-//         type: "POST",
-//         url: 'https://www.google.com/recaptcha/api/siteverify',
-//         data: {"secret" : "6LdZEOUZAAAAABOhim6Lc8XSEb34nczBkgB2LeOe", "response" : response, "remoteip":"localhost"},
-//         contentType: 'application/x-www-form-urlencoded',
-//         success: function(data) { console.log(data); }
-//     });
-// }
+function validateRegister(){
+	emailStr = document.getElementById("email").value;
+	passwordStr1 = document.getElementById("password1").value;
+	passwordStr2 = document.getElementById("password2").value;
+	firstNameStr = document.getElementById("firstname").value;
+	lastNameStr = document.getElementById("lastname").value;
+	promoCode =  document.getElementById("promocode").value;
+	var res= "";
+	res += ValidateEmail(emailStr);
+	//res += ValidatePassword(passwordStr1);
+	//res += ValidatePassword(passwordStr2);
+	res += textEqual(passwordStr1,passwordStr2);
+	res += validateName(firstNameStr);
+	res += validateName(lastNameStr);
+
+
+	return res;
+}
 
 function validateLogin(){
 	emailStr = document.getElementById("email").value;
@@ -33,6 +39,7 @@ function validateLogin(){
 		return "";
 	}
 }
+
 function ValidateEmail(email) 
 {
 	var res=""
@@ -44,6 +51,14 @@ function ValidateEmail(email)
 	
 	return res
 }
+
+function validateName(str){
+	if (/^[a-zA-Z]+$/.test(str) && str.length>0) {
+		return "";
+	}
+	return " Name or Last Name just letters";
+}
+
 function ValidatePassword(password){
 	 
 	var res=""
@@ -70,6 +85,12 @@ function ValidatePassword(password){
 	
 	return res
 		
+}
+function textEqual(str1,str2){
+	if(str1 != str2){
+		return "\nPassword are not equals";
+	}
+	return "";
 }
 
 function sendData() {

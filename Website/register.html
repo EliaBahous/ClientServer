@@ -19,6 +19,8 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="validation.js"></script>
 
 </head>
 
@@ -36,48 +38,76 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" action="/addUser" method="POST">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                        <input type="text" class="form-control form-control-user" name="firstname"
+                                            placeholder="First Name" required  onkeyup='check();'>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                        <input type="text" class="form-control form-control-user" name="lastname"
+                                            placeholder="Last Name" required  onkeyup='check();'>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+                                    <input type="email" class="form-control form-control-user" name="email"
+                                        placeholder="Email Address" required  onkeyup='check();'>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                        name="password1" placeholder="Password" required  onkeyup='check();'>
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        name="password2" placeholder="Repeat Password" required  onkeyup='check();'>
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" name="promocode"
+                                            placeholder="Promo Code">
+                                    </div>
+                                    <span id="invalidData">Check Data</span>
+
+                                </div>
+                                <script>
+                                      
+                                    document.getElementById("invalidData").style.visibility = 'hidden';
+                                    document.getElementById("invalidData").style.color = 'red';
+                                    function check(){
+                                        var loginRes =""
+                                        //loginRes =  checkRecaptcha();
+                                        //loginRes += validateRegister();
+                                        if(loginRes == ""){
+                                            document.getElementById("loginbu").innerHTML= '<button id="registerButton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
+                                        }else{
+                                            document.getElementById("invalidData").innerHTML = loginRes;
+                                            document.getElementById("invalidData").style.visibility = 'visible'
+                                        }
+                                     
+                                    }
+     
+                                </script>
+                                <script>
+                                    const params = new URLSearchParams(window.location.search)
+                                    var mode = params.getAll('mode');
+                                    if (mode =="t") {
+                                            document.getElementById("invalidData").style.visibility = 'visible';
+                                            document.getElementById("invalidData").innerHTML = 'Please check your email to validate';
+                                            document.getElementById("invalidData").style.color = 'green';
+                                    }
+                             
+                                </script>
+                                <div class="g-recaptcha" data-callback="check"  data-sitekey="6Ld8fx8aAAAAAIOdbuJI-SMesnuuBT-vPFpKplg4"></div>
+                                <span id="loginbu"></span>
                             </form>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                <a class="small" href="/forgetPassword">Forgot Password?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
+                                <a class="small" href="/login">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>

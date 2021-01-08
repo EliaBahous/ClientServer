@@ -1,27 +1,32 @@
+let port = process.env.PORT || 3000;
 const express = require('express');
 const session = require('express-session');
 const app = express();
 var bodyParser = require('body-parser');
 var nodemailer = require('nodemailer'); 
+const url = require('url');
 const {Pool, Client} = require('pg');
 const e = require('express');
-
+var CryptoJS = require("crypto-js");
+const { Console } = require('console');
 const connectionString = 'postgressql://postgres:wasap@localhost:5432/Store';
-
+var key = 'secret key 123';
 const client = new Client(connectionString);
 client
   .connect()
   .then(() => console.log('connected'))
   .catch(err => console.error('connection error', err.stack));
 var sessions = [];
+var insertRequests = {} // empty Object
+insertRequests['Requests'] = []; // empty Array, which you can push() values into
+
 app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-let port = process.env.PORT || 3000;
+
 app.listen(port, function(){
   console.log("Listening on port "+port);
 });
-
 
 /************************Functions for request************************/
 
@@ -32,6 +37,51 @@ app.post('/login', function(req, res) {
     checkClient(req,res);
 });
 
+app.get('/insertSuccess',function(req,res){
+
+  const urlReq = new URL("http:localhost//:"+port+req.url);
+  reqEmail = Decrypt(urlReq.searchParams.getAll("email")[0]);
+  // var data = {
+  //   email: reqEmail,
+  //   password:'3JUvbM3YngLAmZW',
+  //   firstname:'Elia',
+  //   lastname:'Bahous',
+  //   promocode:''
+  // };
+  // insertRequests['Requests'].push(data);
+  for(var i=0;i< insertRequests['Requests'].length;i++){
+    if(insertRequests['Requests'][i].email == reqEmail)
+        console.log(reqEmail);
+        getID(i,res,req);
+        break;
+  }
+});
+
+app.post('/addUser', function(req, res) {
+  console.log("Add User-POST-current request: " +req.session.email);
+  let reqFirstName = req.body.firstname + "";
+  let reqLastName = req.body.lastname + "";
+  let reqEmail = req.body.email+"";
+  let reqPassword = req.body.password1+"";
+  let reqPromoCode = req.body.promocode +"";
+  var data = {
+    email: reqEmail,
+    password:reqPassword,
+    firstname:reqFirstName,
+    lastname:reqLastName,
+    promocode:reqPromoCode
+  };
+  insertRequests['Requests'].push(data);
+  message = "http://localhost:"+port+"/insertSuccess?email="+Encrypt(reqEmail);
+  console.log(data)
+  sendEmail(reqEmail+"",message);
+  res.redirect("/register?mode=t");
+});
+
+app.post('/forgetPassword', function(req, res) {
+  console.log("FORGET-PASSWORD-current request: " +req.session.email);
+  checkEmail(req.body.id,req,res);
+});
 app.get('/forgetPassword', function(req, res) {
   console.log("FORGET-PASSWORD-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/forgot-password.html");
@@ -48,13 +98,27 @@ app.get('/forgetPassword?mode=t', function(req, res) {
 });
 
 app.post('/updatePassword',function(req,res){
-  checkEmail(req.body.id,req,res);
+  let reqEmail = req.body.email+"";
+  let reqPassword = req.body.pass1+"";
+
+  let email =Decrypt(reqEmail);
+ 
+  let pass = Encrypt(reqPassword+"");
+
+  console.log("Update-password-POST-current request: " +email+"");
+  updatePassword(email,pass,req,res);
 });
+
 app.get('/home', function(req, res) {
   console.log("HOME-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/index.html");
 });
 
+app.get('/updatePassword',function(req,res){
+  console.log("updatePassword-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/update-password.html");
+
+});
 app.get('/register', function(req, res) {
   res.sendFile(__dirname+ "/Website/register.html");
 });
@@ -79,7 +143,7 @@ app.get('/login', function(req, res) {
     }
 });
 app.get('/logout', function(req, res) {
-  sess = req.session;;
+  sess = req.session;
   var i=0;
   var flag = 0;
   console.log("current request: " +req.session.email);
@@ -95,23 +159,7 @@ app.get('/logout', function(req, res) {
   }
   res.redirect('/login');
 });
-function insertClient(req,res){
-    sess = req.session;
-  pool.query("SELECT id,name,familyname FROM store.users WHERE Email='"+user_id+"' AND Password='"+pass+"'", (err, result)=>{
-    if (err) throw err;
-    if(result.length > 0){
 
-      res.sendFile(__dirname+ "/Website/login.html");
-      sess.email = req.body.id;
-      sess.pass = req.body.pass;
-      sess.name = result[0].name;
-      sess.lname = result[0].familyname;
-      sessions.push(sess);
-      res.session = sess;
-      console.log("Successfully logged in , session wil start for : " +result[0].idusers + " Name:" + result[0].name + " "+ result[0].familyname);
-    }
-  });
-}
 app.get('/getdata',function detData(req,res){
   sess = req.session;
   var i=0;
@@ -127,19 +175,24 @@ app.get('/getdata',function detData(req,res){
   if(flag==0)
     res.send("");
 });
+
 app.get('/login?mode=f',function detData(req,res){
   console.log("LOGINFAILD-GET-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/login.html");
 });
 
+app.get('/updateSuccess',function(req,res){
+  console.log("UpdateSucess-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/PassUpdated.html");
+});
+
 function checkClient(req,res) {
-  sess = req.session;
   var user_id = req.body.id + '';
   var pass = req.body.pass + '';
   var i=0;
   var flag = 0;
   console.log("CHECKCLIENT-current request: " +req.session.email + " " + user_id + " " + pass);
-  //pass = encrypt(pass);
+  pass = Encrypt(pass);
   flag = checkSession(req);
   if(flag == 0){
     const text = 'SELECT id,name,familyname FROM Users WHERE Email=$1 AND password=$2';
@@ -147,9 +200,10 @@ function checkClient(req,res) {
     client.query(text,values, (err, result)=>{
       if (err) throw err;
       if(result.rows.length >0){
+        sess = req.session;
         console.log("Checking username");
         sess.email = user_id;
-        sess.pass = pass;
+        sess.pass = Decrypt(pass);
         const data = result.rows;
         console.log('all data');
         data.forEach(row => {
@@ -178,19 +232,35 @@ function checkSession(req){
   return 0;
 }
 
+function updatePassword(email,password,req,res){
+  const text = 'UPDATE Users SET password=$2 WHERE email=$1;';
+  const values = [email,password];
+  client.query(text,values, (err, result)=>{
+    if (err){
+      res.redirect('/forgetPassword');
+      throw err;
+    }
+    console.log(result + " " + values);
+    console.log("Checking username:\n"+result);
+    sendEmail(email,"the password updated successfuly !!email: " + email + " password: "+Decrypt(password));
+      res.sendFile(__dirname+ "/Website/PassUpdated.html");
+
+  });
+}
 function checkEmail(email,req,res){
   const text = 'SELECT id,email,name,familyname FROM Users WHERE Email=$1';
   const values = [email];
   client.query(text,values, (err, result)=>{
     if (err) throw err;
-    if(result){
+    if(result.rows.length>0){
       console.log("Checking username");
       const data = result.rows;
       console.log('all data');
       data.forEach(row => {
           console.log(`Id: ${row.id} Name: ${row.name} familyname: ${row.familyname}`);
       });
-      sendEmail(email);
+      let message = "http://localhost:"+port+"/updatePassword?email="+Encrypt(email);
+      sendEmail(email,message);
       res.redirect("/forgetPassword?mode=t")
     }else{
       res.redirect('/forgetPassword?mode=f');
@@ -199,7 +269,7 @@ function checkEmail(email,req,res){
 
 }
 
-async function sendEmail(email){
+async function sendEmail(email,data){
   let testAccount = await nodemailer.createTestAccount();
   let mail = 'clientserver.ad1@gmail.com'
    // create reusable transporter object using the default SMTP transport
@@ -213,16 +283,56 @@ async function sendEmail(email){
       pass: 'localhost12', // generated ethereal password
     },
   });
+  
       try{
         // send mail with defined transport object
           let info = await transporter.sendMail({
           from: mail, // sender address
           to: email+"", // list of receivers
-          subject: "Hello ✔", // Subject line
+          subject: "Reset password", // Subject line
           text: "Hello world?", // plain text body
-          html: "http://localhost:"+port+"/updatePassword?email="+email, // html body
+          html: data+"", // html body
       });
       }catch(error){
           console.log(error);
       }
+}
+
+function Encrypt(word) {
+
+  return Buffer.from(word).toString('base64') +"";
+}
+
+function Decrypt(word) {
+  return Buffer.from(word, 'base64').toString() + ""
+}
+
+function insertData(index,res,req,id){
+  
+  id = parseInt(id)+13
+  console.log("New ID = "+(id));
+  let reqFirstName =insertRequests['Requests'][index].firstname;
+  let reqLastName = insertRequests['Requests'][index].lastname + "";
+  let reqEmail = insertRequests['Requests'][index].email+"";
+  let reqPassword = insertRequests['Requests'][index].password+"";
+  let reqPromoCode = insertRequests['Requests'][index].promocode +"";
+  let text = "INSERT INTO Users( email, familyname, id, name, password, promocode) "+
+    "VALUES ($1, $2, $3, $4, $5, $6);";
+  let values = [reqEmail,reqLastName,BigInt(id),reqFirstName,Encrypt(reqPassword),reqPromoCode];
+
+    client.query(text,values, (err, result)=>{
+      if (err){
+         throw err;
+      }
+      sendEmail(reqEmail,"You have created account successfully : email = " +reqEmail + " Password = "+reqPassword);
+      res.redirect("/login");
+    });
+}
+
+async function getID(index,result,req){
+  const text = 'SELECT max(id) as maxid FROM Users';
+  const res = await client.query(text);
+  console.log(res.rows[0].maxid); 
+  insertData(index,result,req, res.rows[0].maxid);
+
 }

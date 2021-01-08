@@ -111,7 +111,7 @@ app.post('/updatePassword',function(req,res){
 
 app.get('/home', function(req, res) {
   console.log("HOME-current request: " +req.session.email);
-  res.sendFile(__dirname+ "/Website/index.html");
+  res.sendFile(__dirname+ "/Website/buy.html");
 });
 
 app.get('/updatePassword',function(req,res){
@@ -133,7 +133,7 @@ app.get('/login', function(req, res) {
       for(i=0;i<sessions.length && flag==0;i++){
         console.log( " -- " +sessions[i].email );
         if(req.session && sessions[i].email == req.session.email){
-          res.sendFile(__dirname+ "/Website/index.html");
+          res.sendFile(__dirname+ "/Website/buy.html");
           flag=1;
         }
       }
@@ -289,8 +289,8 @@ async function sendEmail(email,data){
           let info = await transporter.sendMail({
           from: mail, // sender address
           to: email+"", // list of receivers
-          subject: "Reset password", // Subject line
-          text: "Hello world?", // plain text body
+          subject: "Technical Support- Please read the content", // Subject line
+          text: "Hello Dear", // plain text body
           html: data+"", // html body
       });
       }catch(error){

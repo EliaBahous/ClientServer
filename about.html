@@ -22,6 +22,15 @@
 
 </head>
 
+
+<script >
+    
+    function SendMail(){
+        window.open('mailto:test@example.com');
+    }
+</script>
+
+
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -326,9 +335,11 @@
                                                     <p style="margin: 8px;">  Israel </p>
                                                     <br>
                                                     <h2 class="h3 mb-6 text-gray-900" style="margin: 8px;"> Email </h2>
-                                                    <p style="margin: 8px;"> alsjdh@gmail.com </p>
+                                                    <div>
+                                                   <!-- <p style="margin: 8px; cursor: pointer; " onclick="SendMail()"> alsjdh@gmail.com </p></div>-->
+                                                   <input placeholder="name@example.com" style="margin: 8px; cursor: pointer;border: 2px solid white; " onclick="SendMail()" > </input>
                                                     <br>
-                                                    <h2 class="h3 mb-6 text-gray-900"style="margin: 8px;">   Website </h2>
+                                                    <h2 class="h3 mb-6 text-gray-900" style="margin: 8px;  ">   Website </h2>
                                                     <p style="margin: 8px;">  ....... </p>
                                                     <br>
                                                     <div>

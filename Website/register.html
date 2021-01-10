@@ -97,6 +97,20 @@
                                             document.getElementById("invalidData").innerHTML = 'Please check your email to validate';
                                             document.getElementById("invalidData").style.color = 'green';
                                     }
+                                    if (mode =="f") {
+                                            var email = params.getAll('email');
+                                            var promoCode = params.getAll('promoCode');
+                                            var text ="";
+                                            if(email!=""){
+                                                text +="Email already token";
+                                            }
+                                            if(promoCode!=""){
+                                                text+="Promo code isn't exist";
+                                            }
+                                            document.getElementById("invalidData").style.visibility = 'visible';
+                                            document.getElementById("invalidData").innerHTML = text;
+                                            document.getElementById("invalidData").style.color = 'red';
+                                    }
                              
                                 </script>
                                 <div class="g-recaptcha" data-callback="check"  data-sitekey="6Ld8fx8aAAAAAIOdbuJI-SMesnuuBT-vPFpKplg4"></div>

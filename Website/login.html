@@ -23,7 +23,7 @@
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary"  onload="checkCookie()">
 
     <div class="container">
 
@@ -55,7 +55,7 @@
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
+                                                <label class="custom-control-label" for="customCheck" >Remember
                                                     Me</label>
                                             </div>
                                         </div>
@@ -63,6 +63,8 @@
                                         <script>
                                             document.getElementById("invalidData").style.visibility = 'hidden'
                                             document.getElementById("invalidData").style.color = 'red'
+                                     
+
 
                                             if(sessionStorage.getItem("fullname") != ""){
                                                 var xmlHttp = new XMLHttpRequest();
@@ -76,7 +78,14 @@
                                                 loginRes += validateLogin();
                                                 if(loginRes == ""){
                                                     document.getElementById("loginbu").innerHTML= '<button id="loginbutton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
-                                                    //<button id="checkbutton" class="btn btn-primary btn-user btn-block" onclick="check();" type="submit">Check</button>
+                                                    if (document.getElementById('customCheck').checked) {
+                                                        emailStr = document.getElementById("email").value;
+                                                        passwordStr = document.getElementById("password").value;
+                                                        if(getCookie("email")=="" && emailStr!="" && passwordStr!=""){
+                                                            setCookie("email", emailStr, 365);
+                                                            setCookie("password",passwordStr,365);
+                                                        }
+                                                    } 
                                                 }else{
                                                     grecaptcha.reset();
                                                     document.getElementById("invalidData").style.visibility = 'visible'
@@ -113,7 +122,37 @@
         </div>
 
     </div>
+    <script>
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires="+d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
 
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+            function checkCookie(){
+               username = getCookie("email");
+               pass = getCookie("password");
+               if(username!="" && pass!=""){
+                    document.getElementById("email").value = username;
+                    document.getElementById("password").value = pass;
+                }
+            }
+    </script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

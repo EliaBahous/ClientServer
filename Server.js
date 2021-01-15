@@ -67,10 +67,7 @@ app.post('/addUser', function(req, res) {
   let reqEmail = req.body.email+"";
   let reqPassword = req.body.password1+"";
   let reqPromoCode = req.body.promocode +"";
-  var flag=0;
-
-  flag =emailExist(reqEmail);
-  flag.then(function(value){
+  
     var data = {
       email: reqEmail,
       password:reqPassword,
@@ -83,7 +80,7 @@ app.post('/addUser', function(req, res) {
     console.log(data)
     sendEmail(reqEmail+"",message);
     res.redirect("/register?mode=t");
-  });
+ 
 
 
 });

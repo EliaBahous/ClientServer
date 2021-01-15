@@ -71,42 +71,18 @@ app.post('/addUser', function(req, res) {
 
   flag =emailExist(reqEmail);
   flag.then(function(value){
-  if(value == 2){
-    var flag;
-    if(reqPromoCode != ""){
-      flag +=checkPromoCode(reqPromoCode)
-      flag.then(function(value){
-        if(value==1){
-          res.redirect("/register?mode=f&email="+reqEmail+"&"+"promoCode="+reqPromoCode);
-        }else{
-          res.redirect("/register?mode=f&email="+reqEmail);
-        }
-      });
-    }
-  }else{
-    if(reqPromoCode != ""){
-      var flag;
-      flag +=checkPromoCode(reqPromoCode)
-      flag.then(function(value){
-        if(value==1){
-          res.redirect("/register?mode=f&promoCode="+reqPromoCode);
-        }else{
-            var data = {
-              email: reqEmail,
-              password:reqPassword,
-              firstname:reqFirstName,
-              lastname:reqLastName,
-              promocode:reqPromoCode
-            };
-            insertRequests['Requests'].push(data);
-            message = "http://localhost:"+port+"/insertSuccess?email="+Encrypt(reqEmail);
-            console.log(data)
-            sendEmail(reqEmail+"",message);
-            res.redirect("/register?mode=t");
-        }
-      });
-    }
-  }
+    var data = {
+      email: reqEmail,
+      password:reqPassword,
+      firstname:reqFirstName,
+      lastname:reqLastName,
+      promocode:reqPromoCode
+    };
+    insertRequests['Requests'].push(data);
+    message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
+    console.log(data)
+    sendEmail(reqEmail+"",message);
+    res.redirect("/register?mode=t");
   });
 
 
@@ -293,7 +269,7 @@ function checkEmail(email,req,res){
       data.forEach(row => {
           console.log(`Id: ${row.id} Name: ${row.name} familyname: ${row.familyname}`);
       });
-      let message = "http://localhost:"+port+"/updatePassword?email="+Encrypt(email);
+      let message = "https://eliabahous.herokuapp.com/updatePassword?email="+Encrypt(email);
       sendEmail(email,message);
       res.redirect("/forgetPassword?mode=t")
     }else{

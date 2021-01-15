@@ -77,7 +77,6 @@ app.post('/addUser', function(req, res) {
     };
     insertRequests['Requests'].push(data);
     message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
-    console.log(data)
     sendEmail(reqEmail+"",message);
     res.redirect("/register?mode=t");
  

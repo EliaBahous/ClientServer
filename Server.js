@@ -31,7 +31,7 @@ app.listen(port, function(){
 
 /************************Functions for request************************/
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname+'/Website'));
 
 app.post('/login', function(req, res) {
     console.log("LOGIN-POST-current request: " +req.session.email);
@@ -225,7 +225,7 @@ function checkClient(req,res) {
   var flag = 0;
   console.log("CHECKCLIENT-current request: " +req.session.email + " " + user_id + " " + pass);
   pass = Encrypt(pass);
-  flag = checkSession(req);
+  flag = checkSession(res,req);
   if(flag == 0){
     const text = 'SELECT id,name,familyname FROM Users WHERE Email=$1 AND password=$2';
     const values = [user_id,pass];
@@ -254,7 +254,7 @@ function checkClient(req,res) {
   
 }
 
-function checkSession(req){
+function checkSession(res,req){
   for(i=0;i<sessions.length;i++){
       if(req.session && sessions[i].email == req.session.email){
         res.redirect("/home");

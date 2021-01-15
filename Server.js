@@ -152,7 +152,7 @@ app.get('/logout', function(req, res) {
   sess = req.session;
   var i=0;
   var flag = 0;
-  console.log("current request: " +req.session.email);
+  console.log("LOGOUT-GET-current request: " +req.session.email);
   for(i=0;i<sessions.length;i++){
     console.log( " -- " +sessions[i].email );
     if(req.session && sessions[i].email == req.session.email){
@@ -160,7 +160,7 @@ app.get('/logout', function(req, res) {
       for(j =i ;j<sessions.length-1;j++)sessions[j] = sessions[j+1];
       sessions.length = sessions.length -1;
       flag=1;
-      res.session.destroy();
+      req.session.destroy();
     }
   }
   res.redirect('/login');

@@ -160,7 +160,7 @@ app.get('/logout', function(req, res) {
       for(j =i ;j<sessions.length-1;j++)sessions[j] = sessions[j+1];
       sessions.length = sessions.length -1;
       flag=1;
-      req.session.destroy();
+      res.session.destroy();
     }
   }
   res.redirect('/login');

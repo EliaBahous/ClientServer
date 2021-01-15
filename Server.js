@@ -9,6 +9,7 @@ const {Pool, Client} = require('pg');
 const e = require('express');
 var CryptoJS = require("crypto-js");
 const { Console } = require('console');
+const { exit } = require('process');
 const connectionString = 'postgressql://postgres:wasap@localhost:5432/Store';
 var key = 'secret key 123';
 const client = new Client(connectionString);
@@ -30,7 +31,7 @@ app.listen(port, function(){
 
 /************************Functions for request************************/
 
-app.use(express.static('WebSite'));
+app.use(express.static(__dirname));
 
 app.post('/login', function(req, res) {
     console.log("LOGIN-POST-current request: " +req.session.email);
@@ -65,31 +66,48 @@ app.post('/addUser', function(req, res) {
   let reqPassword = req.body.password1+"";
   let reqPromoCode = req.body.promocode +"";
   var flag=0;
-  //flag +=checkPromoCode(reqPromoCode);
-  flag +=emailExist(reqEmail);
-  if(flag!=0){
-    if(flag==1){
-      res.redirect("/register?mode=f&promoCode="+reqPromoCode);
-    }else if(flag == 2){
-      res.redirect("/register?mode=f&email="+reqEmail);
 
-    }else{
-      res.redirect("/register?mode=f&email="+reqEmail+"&"+"promoCode="+reqPromoCode);
+  flag =emailExist(reqEmail);
+  flag.then(function(value){
+  if(value == 2){
+    var flag;
+    if(reqPromoCode != ""){
+      flag +=checkPromoCode(reqPromoCode)
+      flag.then(function(value){
+        if(value==1){
+          res.redirect("/register?mode=f&email="+reqEmail+"&"+"promoCode="+reqPromoCode);
+        }else{
+          res.redirect("/register?mode=f&email="+reqEmail);
+        }
+      });
     }
   }else{
-    var data = {
-      email: reqEmail,
-      password:reqPassword,
-      firstname:reqFirstName,
-      lastname:reqLastName,
-      promocode:reqPromoCode
-    };
-    insertRequests['Requests'].push(data);
-    message = "http://localhost:"+port+"/insertSuccess?email="+Encrypt(reqEmail);
-    console.log(data)
-    sendEmail(reqEmail+"",message);
-    res.redirect("/register?mode=t");
+    if(reqPromoCode != ""){
+      var flag;
+      flag +=checkPromoCode(reqPromoCode)
+      flag.then(function(value){
+        if(value==1){
+          res.redirect("/register?mode=f&promoCode="+reqPromoCode);
+        }else{
+            var data = {
+              email: reqEmail,
+              password:reqPassword,
+              firstname:reqFirstName,
+              lastname:reqLastName,
+              promocode:reqPromoCode
+            };
+            insertRequests['Requests'].push(data);
+            message = "http://localhost:"+port+"/insertSuccess?email="+Encrypt(reqEmail);
+            console.log(data)
+            sendEmail(reqEmail+"",message);
+            res.redirect("/register?mode=t");
+        }
+      });
+    }
   }
+  });
+
+
 });
 
 app.post('/forgetPassword', function(req, res) {
@@ -352,26 +370,44 @@ async function getID(index,result,req){
 }
 
 function checkPromoCode(promoCode){
-  const text = 'SELECT Id FROM PromoCode WHERE PromoCode=$1';
-  const values = [promoCode];
-  client.query(text,values, (err, result)=>{
-    if (err) throw err;
-    if(result.rows.length>0){
-      return 1;
-    }
-    return 0;
+
+  return new Promise((resolve, reject) => {
+    const text = 'SELECT * FROM promocode';
+    const values = [promoCode];
+    client.query(text,(err, result)=>{
+      if (err) return reject(err);
+      if(result.rows.length>0){
+        for(var i=0;i<result.rows.length;i++){
+        if(result.rows[i]["PromoCode"]== promoCode){
+          return resolve({x:0});
+        }
+      }
+      
+      }
+      return resolve({x:1});
+    });
+  
   });
+
 
 }
 
 function emailExist(reqEmail){
   const text = 'SELECT id,email,name,familyname FROM Users WHERE Email=$1';
   const values = [reqEmail];
-  client.query(text,values, (err, result)=>{
-    if (err) throw err;
-    if(result.rows.length>0){
-     return 2;
-    }
+  return new Promise((resolve, reject) => {
+
+    client.query(text,values,(err, result)=>{
+      if (err) return reject(err);
+      if(result.rows.length>0){
+        
+        return resolve(2);
+      
+      }
+      return resolve(0);
+    });
+  
   });
-  return 0;
+
+
 }

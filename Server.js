@@ -62,14 +62,14 @@ app.post('/addUser', function(req, res) {
   var checkEmail = emailExist(reqEmail)
   checkEmail.then((x)=>{
       if(x==2){
-        res.redirect("/register?mode=f&mail="+reqEmail);
+        res.redirect("/register?mode=f&email="+reqEmail);
 
       }else{
         if(reqPromoCode!=""){
           var checkPromo = checkPromoCode(reqPromoCode);
           checkPromo.then((y)=>{
               if(y==2){
-                res.redirect("/register?mode=f&mail="+reqEmail+"&promoCode=undefiend");
+                res.redirect("/register?mode=f&email="+reqEmail+"&promoCode=undefiend");
               }else{
                 insertRequests['Requests'].push({
                   email: reqEmail,

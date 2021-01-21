@@ -66,7 +66,7 @@ app.post('/addUser', function(req, res) {
       lastname:reqLastName,
       promocode:reqPromoCode
     });
- 
+    
     message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
     sendEmail(reqEmail+"",message);
     res.redirect("/register?mode=t");
@@ -306,15 +306,16 @@ function insertData(index,res,req,id){
   
   id = parseInt(id)+13
   console.log("New ID = "+(id));
-  let reqFirstName =insertRequests['Requests'][index].firstname;
-  let reqLastName = insertRequests['Requests'][index].lastname + "";
-  let reqEmail = insertRequests['Requests'][index].email+"";
-  let reqPassword = insertRequests['Requests'][index].password+"";
-  let reqPromoCode = insertRequests['Requests'][index].promocode +"";
-  let text = "INSERT INTO Users( email, familyname, id, name, password, promocode) "+
+  var reqFirstName =insertRequests['Requests'][index].firstname;
+  var reqLastName = insertRequests['Requests'][index].lastname + "";
+  var reqEmail = insertRequests['Requests'][index].email+"";
+  var reqPassword = insertRequests['Requests'][index].password+"";
+  var reqPromoCode = insertRequests['Requests'][index].promocode +"";
+
+  var text = "INSERT INTO Users( email, familyname, id, name, password, promocode) "+
     "VALUES ($1, $2, $3, $4, $5, $6);";
   let values = [reqEmail,reqLastName,BigInt(id),reqFirstName,Encrypt(reqPassword),reqPromoCode];
-
+  console.log(values)
     client.query(text,values, (err, result)=>{
       if (err){
          throw err;

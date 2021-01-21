@@ -12,7 +12,6 @@ const { Console } = require('console');
 const { exit } = require('process');
 const connectionString = 'postgressql://postgres:wasap@localhost:5432/Store';
 const connectionStringHeroku='postgres://uubzjqksqoflsl:9ce6707d7298107631ecd7317272126ef4300640aa7bee47266e5a55176a5777@ec2-34-236-215-156.compute-1.amazonaws.com:5432/d7b1q1fidadk2k';
-var key = 'secret key 123';
 
 const client = new Client(connectionStringHeroku);
 client
@@ -44,14 +43,6 @@ app.get('/insertSuccess',function(req,res){
 
   const urlReq = new URL("http:localhost//:"+port+req.url);
   reqEmail = Decrypt(urlReq.searchParams.getAll("email")[0]);
-  // var data = {
-  //   email: reqEmail,
-  //   password:'3JUvbM3YngLAmZW',
-  //   firstname:'Elia',
-  //   lastname:'Bahous',
-  //   promocode:''
-  // };
-  // insertRequests['Requests'].push(data);
   for(var i=0;i< insertRequests['Requests'].length;i++){
     if(insertRequests['Requests'][i].email == reqEmail)
         console.log(reqEmail);
@@ -67,15 +58,15 @@ app.post('/addUser', function(req, res) {
   let reqEmail = req.body.email+"";
   let reqPassword = req.body.password1+"";
   let reqPromoCode = req.body.promocode +"";
-  
-    var data = {
+
+    insertRequests['Requests'].push({
       email: reqEmail,
       password:reqPassword,
       firstname:reqFirstName,
       lastname:reqLastName,
       promocode:reqPromoCode
-    };
-    insertRequests['Requests'].push(data);
+    });
+ 
     message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
     sendEmail(reqEmail+"",message);
     res.redirect("/register?mode=t");
@@ -355,8 +346,9 @@ function checkPromoCode(promoCode){
         }
       }
       
+      }else{
+       resolve({x:1});
       }
-      return resolve({x:1});
     });
   
   });
@@ -373,10 +365,11 @@ function emailExist(reqEmail){
       if (err) return reject(err);
       if(result.rows.length>0){
         
-        return resolve(2);
+         resolve(2);
       
+      }else{
+       resolve(0);
       }
-      return resolve(0);
     });
   
   });

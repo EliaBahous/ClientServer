@@ -323,6 +323,7 @@ function insertData(index,res,req,id){
       sendEmail(reqEmail,"You have created account successfully : email = " +reqEmail + " Password = "+reqPassword);
       res.redirect("/login");
     });
+    insertRequests['Requests'].pop(insertRequests['Requests'][index]);
 }
 
 async function getID(index,result,req){

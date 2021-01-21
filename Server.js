@@ -59,19 +59,51 @@ app.post('/addUser', function(req, res) {
   let reqPassword = req.body.password1+"";
   let reqPromoCode = req.body.promocode +"";
 
-    insertRequests['Requests'].push({
-      email: reqEmail,
-      password:reqPassword,
-      firstname:reqFirstName,
-      lastname:reqLastName,
-      promocode:reqPromoCode
-    });
-    
-    message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
-    sendEmail(reqEmail+"",message);
-    res.redirect("/register?mode=t");
- 
+  var checkEmail = emailExist(reqEmail)
+  checkEmail.then((x)=>{
+      if(x==2){
+        res.redirect("/register?mode=f&mail="+reqEmail);
 
+      }else{
+        if(reqPromoCode!=""){
+          var checkPromo = checkPromoCode(reqPromoCode);
+          checkPromo.then((y)=>{
+              if(y==2){
+                res.redirect("/register?mode=f&mail="+reqEmail+"&promoCode=undefiend");
+              }else{
+                insertRequests['Requests'].push({
+                  email: reqEmail,
+                  password:reqPassword,
+                  firstname:reqFirstName,
+                  lastname:reqLastName,
+                  promocode:reqPromoCode
+                });
+                
+                  message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
+                  sendEmail(reqEmail+"",message);
+                  res.redirect("/register?mode=t");
+               
+              
+              }
+          })
+      }else{
+          insertRequests['Requests'].push({
+            email: reqEmail,
+            password:reqPassword,
+            firstname:reqFirstName,
+            lastname:reqLastName,
+            promocode:""
+          });
+          
+            message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
+            sendEmail(reqEmail+"",message);
+            res.redirect("/register?mode=t");
+        
+        
+      }
+      }
+  });
+ 
 
 });
 
@@ -338,18 +370,17 @@ function checkPromoCode(promoCode){
 
   return new Promise((resolve, reject) => {
     const text = 'SELECT * FROM promocode';
-    const values = [promoCode];
     client.query(text,(err, result)=>{
       if (err) return reject(err);
       if(result.rows.length>0){
         for(var i=0;i<result.rows.length;i++){
         if(result.rows[i]["PromoCode"]== promoCode){
-          return resolve({x:0});
+          return resolve(0);
         }
       }
       
       }else{
-       resolve({x:1});
+       resolve(1);
       }
     });
   

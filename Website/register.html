@@ -77,8 +77,8 @@
                                     document.getElementById("invalidData").style.color = 'red';
                                     function check(){
                                         var loginRes =""
-                                        //loginRes =  checkRecaptcha();
-                                        //loginRes += validateRegister();
+                                        loginRes =  checkRecaptcha();
+                                        loginRes += validateRegister();
                                         if(loginRes == ""){
                                             document.getElementById("loginbu").innerHTML= '<button id="registerButton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
                                         }else{

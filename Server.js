@@ -34,9 +34,6 @@ app.listen(port, function(){
 
 app.use(express.static(__dirname+'/Website'));
 
-app.get('*', function(req, res){
-  res.sendFile(__dirname+ "/Website/404.html");
-  })
 
 app.post('/login', function(req, res) {
     console.log("LOGIN-POST-current request: " +req.session.email);
@@ -413,3 +410,6 @@ function emailExist(reqEmail){
 
 
 }
+app.get('*', function(req, res){
+  res.sendFile(__dirname+ "/Website/404.html");
+  })

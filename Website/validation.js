@@ -17,8 +17,8 @@ function validateRegister(){
 	promoCode =  document.getElementById("promocode").value;
 	var res= "";
 	res += ValidateEmail(emailStr);
-	//res += ValidatePassword(passwordStr1);
-	//res += ValidatePassword(passwordStr2);
+	res += ValidatePassword(passwordStr1);
+	res += ValidatePassword(passwordStr2);
 	res += textEqual(passwordStr1,passwordStr2);
 	res += validateName(firstNameStr);
 	res += validateName(lastNameStr);
@@ -31,8 +31,8 @@ function validateLogin(){
 	emailStr = document.getElementById("email").value;
 	passwordStr = document.getElementById("password").value;
 	var res = ""
-	//res += ValidateEmail(emailStr)
-	//res += ValidatePassword(passwordStr)
+	res += ValidateEmail(emailStr)
+	res += ValidatePassword(passwordStr)
 	if(res!=""){
 		alert("Check the parameters"); 
 	}else{

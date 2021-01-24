@@ -12,7 +12,10 @@ const { Console } = require('console');
 const { exit } = require('process');
 const connectionString = 'postgressql://postgres:wasap@localhost:5432/Store';
 const connectionStringHeroku='postgres://uubzjqksqoflsl:9ce6707d7298107631ecd7317272126ef4300640aa7bee47266e5a55176a5777@ec2-34-236-215-156.compute-1.amazonaws.com:5432/d7b1q1fidadk2k';
-var key = 'secret key 123';
+
+//matih
+var http = require('http');
+var fs = require('fs');
 
 const client = new Client(connectionStringHeroku);
 client
@@ -35,6 +38,7 @@ app.listen(port, function(){
 
 app.use(express.static(__dirname+'/Website'));
 
+
 app.post('/login', function(req, res) {
     console.log("LOGIN-POST-current request: " +req.session.email);
     checkClient(req,res);
@@ -44,14 +48,6 @@ app.get('/insertSuccess',function(req,res){
 
   const urlReq = new URL("http:localhost//:"+port+req.url);
   reqEmail = Decrypt(urlReq.searchParams.getAll("email")[0]);
-  // var data = {
-  //   email: reqEmail,
-  //   password:'3JUvbM3YngLAmZW',
-  //   firstname:'Elia',
-  //   lastname:'Bahous',
-  //   promocode:''
-  // };
-  // insertRequests['Requests'].push(data);
   for(var i=0;i< insertRequests['Requests'].length;i++){
     if(insertRequests['Requests'][i].email == reqEmail)
         console.log(reqEmail);
@@ -67,20 +63,52 @@ app.post('/addUser', function(req, res) {
   let reqEmail = req.body.email+"";
   let reqPassword = req.body.password1+"";
   let reqPromoCode = req.body.promocode +"";
-  
-    var data = {
-      email: reqEmail,
-      password:reqPassword,
-      firstname:reqFirstName,
-      lastname:reqLastName,
-      promocode:reqPromoCode
-    };
-    insertRequests['Requests'].push(data);
-    message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
-    sendEmail(reqEmail+"",message);
-    res.redirect("/register?mode=t");
- 
 
+  var checkEmail = emailExist(reqEmail)
+  checkEmail.then((x)=>{
+      if(x==2){
+        res.redirect("/register?mode=f&email="+reqEmail);
+
+      }else{
+        if(reqPromoCode!=""){
+          var checkPromo = checkPromoCode(reqPromoCode);
+          checkPromo.then((y)=>{
+              if(y==2){
+                res.redirect("/register?mode=f&email="+reqEmail+"&promoCode=undefiend");
+              }else{
+                insertRequests['Requests'].push({
+                  email: reqEmail,
+                  password:reqPassword,
+                  firstname:reqFirstName,
+                  lastname:reqLastName,
+                  promocode:reqPromoCode
+                });
+                
+                  message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
+                  sendEmail(reqEmail+"",message);
+                  res.redirect("/register?mode=t");
+               
+              
+              }
+          })
+      }else{
+          insertRequests['Requests'].push({
+            email: reqEmail,
+            password:reqPassword,
+            firstname:reqFirstName,
+            lastname:reqLastName,
+            promocode:""
+          });
+          
+            message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
+            sendEmail(reqEmail+"",message);
+            res.redirect("/register?mode=t");
+        
+        
+      }
+      }
+  });
+ 
 
 });
 
@@ -156,11 +184,9 @@ app.get('/logout', function(req, res) {
   for(i=0;i<sessions.length;i++){
     console.log( " -- " +sessions[i].email );
     if(req.session && sessions[i].email == req.session.email){
-      var j;
-      for(j =i ;j<sessions.length-1;j++)sessions[j] = sessions[j+1];
-      sessions.length = sessions.length -1;
-      flag=1;
+      sessions.pop(sessions[i]);
       req.session.destroy();
+      
     }
   }
   res.redirect('/login');
@@ -317,15 +343,16 @@ function insertData(index,res,req,id){
   
   id = parseInt(id)+13
   console.log("New ID = "+(id));
-  let reqFirstName =insertRequests['Requests'][index].firstname;
-  let reqLastName = insertRequests['Requests'][index].lastname + "";
-  let reqEmail = insertRequests['Requests'][index].email+"";
-  let reqPassword = insertRequests['Requests'][index].password+"";
-  let reqPromoCode = insertRequests['Requests'][index].promocode +"";
-  let text = "INSERT INTO Users( email, familyname, id, name, password, promocode) "+
+  var reqFirstName =insertRequests['Requests'][index].firstname;
+  var reqLastName = insertRequests['Requests'][index].lastname + "";
+  var reqEmail = insertRequests['Requests'][index].email+"";
+  var reqPassword = insertRequests['Requests'][index].password+"";
+  var reqPromoCode = insertRequests['Requests'][index].promocode +"";
+
+  var text = "INSERT INTO Users( email, familyname, id, name, password, promocode) "+
     "VALUES ($1, $2, $3, $4, $5, $6);";
   let values = [reqEmail,reqLastName,BigInt(id),reqFirstName,Encrypt(reqPassword),reqPromoCode];
-
+  console.log(values)
     client.query(text,values, (err, result)=>{
       if (err){
          throw err;
@@ -333,6 +360,7 @@ function insertData(index,res,req,id){
       sendEmail(reqEmail,"You have created account successfully : email = " +reqEmail + " Password = "+reqPassword);
       res.redirect("/login");
     });
+    insertRequests['Requests'].pop(insertRequests['Requests'][index]);
 }
 
 async function getID(index,result,req){
@@ -347,18 +375,18 @@ function checkPromoCode(promoCode){
 
   return new Promise((resolve, reject) => {
     const text = 'SELECT * FROM promocode';
-    const values = [promoCode];
     client.query(text,(err, result)=>{
       if (err) return reject(err);
       if(result.rows.length>0){
         for(var i=0;i<result.rows.length;i++){
         if(result.rows[i]["PromoCode"]== promoCode){
-          return resolve({x:0});
+          return resolve(0);
         }
       }
       
+      }else{
+       resolve(1);
       }
-      return resolve({x:1});
     });
   
   });
@@ -375,13 +403,147 @@ function emailExist(reqEmail){
       if (err) return reject(err);
       if(result.rows.length>0){
         
-        return resolve(2);
+         resolve(2);
       
+      }else{
+       resolve(0);
       }
-      return resolve(0);
     });
   
   });
 
 
 }
+app.get('*', function(req, res){
+  res.sendFile(__dirname+ "/Website/404.html");
+  })
+
+  // ============================ Mati new =====================================
+
+app.get('/profileDetails', function (req, res) {
+  var newEmail = Decrypt(req.query.email);
+  var id = req.query.id;
+    if(newEmail)
+    {
+      UpdateUserEmail(newEmail,id);
+    }
+    let data = fs.readFileSync(__dirname + "/Website/profile_details.html", 'utf8');
+    if(data)
+    {
+      // res.send(data.replace('param1Place',req.session.email));
+      res.send(data.replace('param1Place',"mati7529992@gmail.com"));
+    }
+    res.send(__dirname + "/Website/profile_details.html", 'utf8');
+});
+
+app.post('/profileDetails', function (req, res) {
+    
+    // console.log(req);
+    // console.log("this is one req!!!!!!!!!!!\n\n");
+    var msgLog ="";
+    switch (req.body.todo) {
+        case '1':
+          //Enter the screen  
+           GetUserDataToClient(res,req.body.email);
+           console.log('case 1');
+
+           break;
+        case '2':
+            //Update profile details  
+            console.log('case 2');
+            UpdateUserData(req);
+            sendEmail(req.body.email,"Data was change!")
+            res.redirect("/profileDetails");
+
+             break;
+        case '3':
+            //Change password  
+            console.log('case 3');
+            UpdateUserPassword(req);
+            res.redirect("/profileDetails");
+             break;
+        case '4':
+            //Send an email Validation  
+            console.log('case 4');
+            
+            ////check if email is already exist
+            let em = emailExist(req.body.email);
+            em.then(function (val) {
+              if (val == 2) {
+                var errText = "This email is already exist!";
+                res.setHeader('errMsg', errText);
+                res.end();
+              }
+            });
+
+            let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/profileDetails?email="+Encrypt(req.body.email)+"&id="+req.body.id;
+            sendEmail(req.body.email,message);
+            res.redirect("/profileDetails");
+            
+            break;
+        default:
+            console.log(`Sorry, we are out of ${req.body.todo}.`);
+            break;
+
+    }
+    
+});
+
+
+async function GetUserDataToClient(response,emailToGet){
+  const text = "SELECT id,name,familyname,phonenumber,country,email,city,street,zipcode,password FROM Users WHERE email=$1";
+  const values = [emailToGet];
+  const res = await client.query(text,values);
+  SendUserDataToClient(response,res.rows[0].id,res.rows[0].name,res.rows[0].familyname,res.rows[0].phonenumber,res.rows[0].country,res.rows[0].email,res.rows[0].city,res.rows[0].street,res.rows[0].zipcode,Decrypt(res.rows[0].password))
+
+}
+
+function SendUserDataToClient(res,id,firstname,lastname,phone,country,email,city,street,zipcode,password){
+  
+  var arr = new Array(firstname,lastname,phone,country,email,city,street,zipcode,password);
+  for (const property in arr) {
+    if(arr[property] ==null)
+    arr[property]='';
+  }
+  
+  res.setHeader('id', id);
+
+  res.setHeader('firstname', arr[0]);
+  res.setHeader('lastname', arr[1]);
+  res.setHeader('phone', arr[2]);
+  res.setHeader('country', arr[3]);
+  res.setHeader('email', arr[4]);
+  res.setHeader('city', arr[5]);
+  res.setHeader('street',arr[6]);
+  res.setHeader('zipcode', arr[7]);
+
+  res.setHeader('password', arr[8]);
+  res.end();
+
+}
+
+async function UpdateUserData(req)
+{
+  const text = "UPDATE Users SET name=$1,familyname=$2,phonenumber=$3,country=$4,city=$5,street=$6,zipcode=$7 WHERE email=$8 ;";
+   const values = [req.body.firstname,req.body.lastname,req.body.phone,req.body.country,req.body.city,req.body.street,req.body.zipcode,req.body.email];
+  const result = await client.query(text,values);
+  console.log("\n\nUpdate Data!!!!!\n\n");
+}
+
+async function UpdateUserPassword(req)
+{
+  var encryptPassword = Encrypt(req.body.newPassword);
+  const text = "UPDATE Users SET password=$1 WHERE id=$2 ;";
+   const values = [encryptPassword,req.body.id];
+  const result = await client.query(text,values);
+  console.log("\n\nUpdate PASSWORD!!!!!\n\n");
+}
+
+async function UpdateUserEmail(newemail,id)
+{
+  const text = "UPDATE Users SET email=$1 WHERE id=$2 ;";
+   const values = [newemail,id];
+  const result = await client.query(text,values);
+  console.log("\n\nUpdate Email!!!!!\n\n");
+}
+

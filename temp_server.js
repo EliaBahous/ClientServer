@@ -111,8 +111,6 @@ app.post('/profileDetails', function (req, res) {
 });
 
 
-
-
 async function GetUserDataToClient(response,emailToGet){
   const text = "SELECT id,name,familyname,phonenumber,country,email,city,street,zipcode,password FROM Users WHERE email=$1";
   const values = [emailToGet];
@@ -143,24 +141,6 @@ function SendUserDataToClient(res,id,firstname,lastname,phone,country,email,city
   res.setHeader('password', arr[8]);
   res.end();
 
-}
-
-function emailExist(reqEmail){
-  const text = 'SELECT id,email,name,familyname FROM Users WHERE Email=$1';
-  const values = [reqEmail];
-  return new Promise((resolve, reject) => {
-
-    client.query(text,values,(err, result)=>{
-      if (err) return reject(err);
-      if(result.rows.length>0){
-        
-        return resolve(2);
-      
-      }
-      return resolve(0);
-    });
-  
-  });
 }
 
 async function UpdateUserData(req)
@@ -194,6 +174,23 @@ function Encrypt(value)
   return value;
 }
 
+function emailExist(reqEmail){
+  const text = 'SELECT id,email,name,familyname FROM Users WHERE Email=$1';
+  const values = [reqEmail];
+  return new Promise((resolve, reject) => {
+
+    client.query(text,values,(err, result)=>{
+      if (err) return reject(err);
+      if(result.rows.length>0){
+        
+        return resolve(2);
+      
+      }
+      return resolve(0);
+    });
+  
+  });
+}
 
 async function sendEmail(email, data) {
   let testAccount = await nodemailer.createTestAccount();

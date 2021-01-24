@@ -12,7 +12,7 @@
     <title>Profile details</title>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    
+
     <script>
         var changeMap;
 
@@ -20,6 +20,7 @@
 
         var oldemail;
         var oldpassword;
+        var idClient;
 
         var serverMsg;
 
@@ -30,7 +31,7 @@
         function GetDataFromServer() {
             var http = new XMLHttpRequest();
             var url = document.location;
-            var params = 'todo=1';
+            var params = 'todo=1&email=' + 'param1Place';
 
             http.open('POST', url, true);
 
@@ -41,19 +42,28 @@
 
                 if (http.readyState == 4 && http.status == 200) {
 
-                    var firstname = http.getResponseHeader('firstname');
-                    var lastname = http.getResponseHeader('lastname');
-                    var phone = http.getResponseHeader('phone');
-                    var country = http.getResponseHeader('country');
-                    oldemail = http.getResponseHeader('email');
-                    var city = http.getResponseHeader('city');
-                    var street = http.getResponseHeader('street');
-                    var zipcode = http.getResponseHeader('zipcode');
+                    var errMsg = http.getResponseHeader('errMsg');
+                    if (errMsg) {
+                        alert(errMsg);
+                    }
+                    else {
+                        idClient = http.getResponseHeader('id');
+                        document.getElementById('cp_id').value = idClient;
+                        document.getElementById('update_id').value = idClient;
 
-                    oldpassword = http.getResponseHeader('password');
+                        var firstname = http.getResponseHeader('firstname');
+                        var lastname = http.getResponseHeader('lastname');
+                        var phone = http.getResponseHeader('phone');
+                        var country = http.getResponseHeader('country');
+                        oldemail = http.getResponseHeader('email');
+                        var city = http.getResponseHeader('city');
+                        var street = http.getResponseHeader('street');
+                        var zipcode = http.getResponseHeader('zipcode');
 
-                    UpdateDetails(firstname, lastname, phone, country, oldemail, city, street, zipcode);
+                        oldpassword = http.getResponseHeader('password');
 
+                        UpdateDetails(firstname, lastname, phone, country, oldemail, city, street, zipcode);
+                    }
                 }
             }
             http.send(params);
@@ -92,7 +102,7 @@
         function SendVarificationMail(email) {
             var http = new XMLHttpRequest();
             var url = document.location;
-            var params = ['todo=4', 'email=' + email];
+            var params = ['todo=4', 'email=' + email,'id=' + idClient];
 
             http.open('POST', url, true);
 
@@ -110,9 +120,24 @@
             }
         };
 
+        function CheckPassword() {
+            var oldPasswordValueField = document.getElementById("oldpasswordInputValue").value;
+            if (oldPasswordValueField != oldpassword) {
+                alert("You Enter worng old password try again!");
+                return false;
+            }
+            if (error_match_password_svg.hidden && error_numberMsg_svg.hidden && error_long6Msg_svg.hidden) {
+                return true;
+            }
+            else{
+                alert("Check passwords!");
+                return false;
+            }
+           
+        };
     </script>
 
-<!-- For style only -->
+    <!-- For style only -->
     <script>
         var showflag1 = 0;
         var showflag2 = 0;
@@ -152,87 +177,80 @@
                 showflag2 = 0;
             }
         };
-        
-        function checkNewPassword()
-        {
+
+        function checkNewPassword() {
             var matchMsg = document.getElementById("match_password");
             var numberMsg = document.getElementById("number_contains");
             var long6Msg = document.getElementById("long_6");
 
             var error_match_password_svg = document.getElementById("error_match_password_svg");
             var check_match_password_svg = document.getElementById("check_match_password_svg");
-            
+
             var error_numberMsg_svg = document.getElementById("error_numberMsg_svg");
             var check_numberMsg_svg = document.getElementById("check_numberMsg_svg");
-            
+
             var error_long6Msg_svg = document.getElementById("error_long6Msg_svg");
             var check_long6Msg_svg = document.getElementById("check_long6Msg_svg");
-            
+
             var new_pass = document.getElementById("new_pass");
             var confirm_pass = document.getElementById("confirm_pass");
 
             //check match
-            if(confirm_pass.value != new_pass.value)
-            {
+            if (confirm_pass.value != new_pass.value) {
                 matchMsg.style.color = "red";
                 error_match_password_svg.hidden = false;
                 check_match_password_svg.hidden = true;
             }
-            else
-            {
+            else {
                 matchMsg.style.color = "green";
                 error_match_password_svg.hidden = true;
                 check_match_password_svg.hidden = false;
             }
-            
-            if(new_pass.value.toString().match(/[0-9]/g))
-            {
+
+            if (new_pass.value.toString().match(/[0-9]/g)) {
                 numberMsg.style.color = "green";
                 error_numberMsg_svg.hidden = true;
                 check_numberMsg_svg.hidden = false;
             }
-            else
-            {
+            else {
                 numberMsg.style.color = "red";
                 error_numberMsg_svg.hidden = false;
                 check_numberMsg_svg.hidden = true;
             }
 
-            if(new_pass.value.toString().length>=6)
-            {
+            if (new_pass.value.toString().length >= 6) {
                 long6Msg.style.color = "green";
                 error_long6Msg_svg.hidden = true;
                 check_long6Msg_svg.hidden = false;
             }
-            else
-            {
+            else {
                 long6Msg.style.color = "red";
                 error_long6Msg_svg.hidden = false;
                 check_long6Msg_svg.hidden = true;
             }
 
         };
-        
-        function edit_details()
-        {
-            $( ".input_details" ).prop( "disabled", false );
-        };
-   </script>
 
-   <script src="validation.js"></script>
-  
-  <style>
-       .input_details{
-        color:blue;
-        /* font-size:1.5em; */
-        border:0;
-        box-shadow: none;
-        background-color:inherit;
-       }
-       .update_password_fields{
-        color: blue;
-       }
-   </style>
+        function edit_details() {
+            $(".input_details").prop("disabled", false);
+        };
+    </script>
+
+    <script src="validation.js"></script>
+
+    <style>
+        .input_details {
+            color: blue;
+            /* font-size:1.5em; */
+            border: 0;
+            box-shadow: none;
+            background-color: inherit;
+        }
+
+        .update_password_fields {
+            color: blue;
+        }
+    </style>
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -244,7 +262,7 @@
 
 </head>
 
-<body id="page-top">
+<body id="page-top" >
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -583,64 +601,64 @@
                             <h4 id="head_Profile" class="h3 mb-4 text-gray-800">Profile details</h4>
                         </div>
                         <div class="row d-grid d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-link font-weight-bold" onclick="edit_details()">Edit details</button>
+                            <button type="button" class="btn btn-link font-weight-bold" onclick="edit_details()">Edit
+                                details</button>
                         </div>
-                        <form id="profile_details" action="/profileDetails" method="POST" onsubmit="CheckEmail();"> 
+                       
+                        <form id="profile_details" action="/profileDetails" method="POST"
+                            onsubmit="return CheckEmail();">
                             <div class="row">
                                 <div class="col-6 col-md-3">
                                     <label for="firstname" class="form-label">First name</label>
-                                    <input name="firstname" id="firstname" type="text" class="form-inline no-border input_details " placeholder="-"  disabled>
+                                    <input name="firstname" id="firstname" type="text"
+                                        class="form-inline no-border input_details " placeholder="-" disabled>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="lastname" class="form-label">last name</label>
-                                    <input name="lastname" id="lastname" type="text" class="form-inline no-border input_details"
-                                     placeholder="-"
-                                        disabled>
+                                    <input name="lastname" id="lastname" type="text"
+                                        class="form-inline no-border input_details" placeholder="-" disabled>
 
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="phone" class="form-label">Phone number</label>
-                                    <input name="phone" id="phone" type="tel" class="form-inline no-border input_details"
-                                     placeholder="-"
-                                        disabled>
+                                    <input name="phone" id="phone" type="tel"
+                                        class="form-inline no-border input_details" placeholder="-" disabled>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="country" class="form-label">Country</label>
-                                    <input name="country" id="country" type="text" class="form-inline no-border input_details"
-                                     placeholder="-"
-                                        disabled>
+                                    <input name="country" id="country" type="text"
+                                        class="form-inline no-border input_details" placeholder="-" disabled>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-6 col-md-3">
                                     <label for="email" class="form-label">E-mail</label>
-                                    <input name="email" id="email" type="email" class="form-inline no-border input_details"
-                                    placeholder="-" onfocus="emailFalg=true;"
-                                        disabled >
+                                    <input name="email" id="email" type="email"
+                                        class="form-inline no-border input_details" placeholder="-"
+                                        onfocus="emailFalg=true;" disabled>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="city" class="form-label">City</label>
                                     <input name="city" id="city" type="text" class="form-inline no-border input_details"
-                                     placeholder="-"
-                                        disabled>
+                                        placeholder="-" disabled>
 
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="street" class="form-label">Street</label>
-                                    <input name="street" id="street" type="text" class="form-inline no-border input_details"
-                                     placeholder="-"
-                                        disabled>
+                                    <input name="street" id="street" type="text"
+                                        class="form-inline no-border input_details" placeholder="-" disabled>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="zipCode" class="form-label">Zip code</label>
-                                    <input name="zipCode" id="zipCode" type="number" class="form-inline no-border input_details"
-                                     placeholder="-"
-                                        disabled>
+                                    <input name="zipCode" id="zipCode" type="number"
+                                        class="form-inline no-border input_details" placeholder="-" disabled>
                                 </div>
                             </div>
-                            <input name="todo" style="visibility: hidden;" value="2">
+
                             <div class="row d-grid d-md-flex justify-content-md-end">
+                                <input name="todo" style="visibility: hidden;" value="2">
+                                <input id="update_id" style="visibility: hidden;">
                                 <button type="submit" class="btn btn-link font-weight-bold">Update</button>
                             </div>
                         </form>
@@ -650,111 +668,136 @@
 
                     <div>
                         <h4 class="h3 mb-4 text-gray-800">Change password</h4>
-                        <div class="">
-                            <form id="change_password" action="/profileDetails" method="POST" onsubmit="CheckPassword();">
-                            <input name="todo" style="visibility: hidden;" value="3">
-                                <div class="row ">
+                            <form id="change_password" action="/profileDetails" method="POST" onsubmit="return CheckPassword();">
+                            <input name="todo" style="visibility: hidden;" value="3"> 
+                            <input id="cp_id" name="id" style="visibility: hidden;" > 
+                               
+
+                            <div class="row">
+
+                                <div class="col-xs-12 col-lg-6">
+
                                     <div class="col-xs-12 col-lg-6">
                                         <label class="" for="oldpasswordInputValue"> Old password</label>
                                         <div class="input-group">
-                                            <input type="text" class=" update_password_fields" id="oldpasswordInputValue"
-                                                placeholder="Old password" style="margin-bottom: 2em;" >
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <label for="newpasswordInputValue">New password</label>
-                                                <div class="input-group">
-                                                    <input id="new_pass" type="password" class="update_password_fields"
-                                                        id="newpasswordInputValue" placeholder="New password" oninput="checkNewPassword()">
-                                                    <button class="btn btn-outline-secondary" type="button"
-                                                        id="button-addon1" onclick="changeIcon1()">
-                                                        <svg id="btn-eye" xmlns="http://www.w3.org/2000/svg" width="16"
-                                                            height="16" fill="currentColor" class="bi bi-eye-slash"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
-                                                            <path
-                                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
-                                                        </svg></button>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label for="confirmpasswordInputValue">Confirm password</label>
-                                                <div class="input-group update_password_fields" style="margin-bottom: 1em;">
-                                                    <input id="confirm_pass" type="password" class=""
-                                                        id="confirmpasswordInputValue" placeholder="Confirm password" oninput="checkNewPassword()">
-                                                    <button class="btn btn-outline-secondary" type="button"
-                                                        id="button-addon2" onclick="changeIcon2()">
-                                                        <svg id="btn-eye2" xmlns="http://www.w3.org/2000/svg" width="16"
-                                                            height="16" fill="currentColor" class="bi bi-eye-slash"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
-                                                            <path
-                                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
-                                                        </svg></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="col-xs-12 col-lg-6">
-                                        <div id="match_password" class="float-start" style="color:green;">
-                                            <div id="error_match_password_svg" hidden>
-                                                <svg  xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-x"
-                                                    viewBox="0 0 16 16">  <path
-                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                </svg>
-                                            </div>
-                                            <div id="check_match_password_svg" >
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-                                                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                                                  </svg>
-                                            </div>
-                                            Password must match
-                                        </div>
-                                        <div id="number_contains" class="float-start" style="color:red;">
-                                            <div id="error_numberMsg_svg" >
-                                                <svg  xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-x"
-                                                    viewBox="0 0 16 16">  <path
-                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                </svg>
-                                            </div>
-                                            <div id="check_numberMsg_svg" hidden>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-                                                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                                                  </svg>
-                                            </div>
-                                            The password must contain at least one number
-                                        </div>
-                                        <div id="long_6" class="float-start"  style="color: red;">
-                                            <div id="error_long6Msg_svg" >
-                                                <svg  xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-x"
-                                                    viewBox="0 0 16 16">  <path
-                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                </svg>
-                                            </div>
-                                            <div id="check_long6Msg_svg" hidden>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-                                                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                                                  </svg>
-                                            </div>
-                                            
-                                            The password must be at least 6 characters long
+                                            <input type="text" class=" update_password_fields"
+                                                id="oldpasswordInputValue" placeholder="Old password"
+                                                style="margin-bottom: 2em;">
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="row">
+                                        <div class="col-xs-12 col-lg-6">
+    
+                                            <label for="newPassword">New password</label>
+                                            <div class="input-group">
+                                                <input name="newPassword" type="password" class="update_password_fields"
+                                                    id="new_pass" placeholder="New password"
+                                                    oninput="checkNewPassword();">
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="button-addon1" onclick="changeIcon1()">
+                                                    <svg id="btn-eye" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                        height="16" fill="currentColor" class="bi bi-eye-slash"
+                                                        viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                                        <path
+                                                            d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                                    </svg></button>
+                                            </div>
+    
+                                        </div>
+    
+                                        <div class="col-xs-12 col-lg-6">
+    
+                                            <label for="confirmpasswordInputValue">Confirm password</label>
+                                            <div class="input-group" style="margin-bottom: 1em;">
+                                                <input id="confirm_pass" type="password" class="update_password_fields"
+                                                    id="confirmpasswordInputValue" placeholder="Confirm password"
+                                                    oninput="checkNewPassword()">
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="button-addon2" onclick="changeIcon2()">
+                                                    <svg id="btn-eye2" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                        height="16" fill="currentColor" class="bi bi-eye-slash"
+                                                        viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                                        <path
+                                                            d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                                    </svg></button>
+                                            </div>
+    
+                                        </div>
+                                    </div>
+                                   
+
                                 </div>
+
+                                <div class="col-xs-12 col-lg-6">
+                                    <div id="match_password" class="float-start" style="color:green;">
+                                        <div id="error_match_password_svg" hidden>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                                fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                            </svg>
+                                        </div>
+                                        <div id="check_match_password_svg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                                fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                                            </svg>
+                                        </div>
+                                        Password must match
+                                    </div>
+                                    <div id="number_contains" class="float-start" style="color:red;">
+                                        <div id="error_numberMsg_svg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                                fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                            </svg>
+                                        </div>
+                                        <div id="check_numberMsg_svg" hidden>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                                fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                                            </svg>
+                                        </div>
+                                        The password must contain at least one number
+                                    </div>
+                                    <div id="long_6" class="float-start" style="color: red;">
+                                        <div id="error_long6Msg_svg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                                fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                            </svg>
+                                        </div>
+                                        <div id="check_long6Msg_svg" hidden>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                                fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                                            </svg>
+                                        </div>
+
+                                        The password must be at least 6 characters long
+                                    </div>
+                                </div>
+
+                            </div>
+
                                 <div class="row">
                                     <div class="col-xs-12 col-lg-6">
-                                    <button type="submit" class="btn btn-secondary" style="width: 100%;">Change
-                                        password</button>
+                                        <button type="submit" class="btn btn-secondary" style="width: 100%;">Change
+                                            password</button>
                                     </div>
                                 </div>
-                                
-                            </form>
-                        </div>
 
+                            </form>
                     </div>
 
                 </div>

@@ -83,6 +83,26 @@
             SetField(zipCode, "zipCode");
         }
 
+        function updateData()
+        {
+            var msg = "";
+            msg = checkField("firstname");
+            msg += checkField("lastname");
+            msg += checkField("phone");
+            msg += checkField("country");
+            msg += checkField("email");
+            msg += checkField("city");
+            msg += checkField("street");
+            msg += checkField("zipCode");
+
+            if(msg!="")
+            {
+                alert("You can't delete data from the fields: " + msg);
+                return false;
+            }
+            return CheckEmail();
+        };
+
         function CheckEmail() {
             if (emailFalg) {
                 var emailField = document.getElementById("email");
@@ -119,6 +139,16 @@
                 document.getElementById(field.toString()).value = input;
             }
         };
+
+        function checkField(field)
+        {
+            var input = document.getElementById(field.toString()).value;
+            if(input.trim()== "" && changeMap[field.toString()] == "not allow")
+            {
+                return "\n"+field.toString();
+            }
+            return "";
+        }
 
         function CheckPassword() {
             var oldPasswordValueField = document.getElementById("oldpasswordInputValue").value;
@@ -606,7 +636,7 @@
                         </div>
                        
                         <form id="profile_details" action="/profileDetails" method="POST"
-                            onsubmit="return CheckEmail();">
+                            onsubmit="return updateData();">
                             <div class="row">
                                 <div class="col-6 col-md-3">
                                     <label for="firstname" class="form-label">First name</label>

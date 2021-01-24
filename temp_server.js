@@ -54,7 +54,8 @@ app.get('/profileDetails', function (req, res) {
       // res.send(data.replace('param1Place',req.session.email));
       res.send(data.replace('param1Place',"mati7529992@gmail.com"));
     }
-    res.send(__dirname + "/Website/profile_details.html", 'utf8');
+    else{res.send(__dirname + "/Website/profile_details.html", 'utf8');
+  }
 });
 
 app.post('/profileDetails', function (req, res) {
@@ -170,6 +171,11 @@ async function UpdateUserEmail(newemail,id)
 
 //function for delete
 function Encrypt(value)
+{
+  return value;
+}
+
+function Decrypt(value)
 {
   return value;
 }

@@ -11,7 +11,7 @@
 
     <title>Profile details</title>
 
-    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
     <script>
         var changeMap;
@@ -48,7 +48,7 @@
             var url = document.location;
             var params = 'todo=1&email=' + 'param1Place';
 
-            http.open('POST', url, true);
+            http.open('POST', url, false);
 
             //Send the proper header information along with the request
             http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -81,7 +81,7 @@
                     }
                 }
             }
-            http.send();
+            http.send(params);
         }
 
         function UpdateDetails(firstname, lastname, phone, country, email, city, street, zipCode) {

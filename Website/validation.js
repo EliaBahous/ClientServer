@@ -33,11 +33,7 @@ function validateLogin(){
 	var res = ""
 	res += ValidateEmail(emailStr)
 	res += ValidatePassword(passwordStr)
-	if(res!=""){
-		alert("Check the parameters"); 
-	}else{
-		return "";
-	}
+	return res;
 }
 
 function ValidateEmail(email) 

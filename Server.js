@@ -427,7 +427,7 @@ app.get('/profileDetails', function (req, res) {
   //   }
   //   else
   //   {
-      res.send(__dirname + "/Website/profile_details.html", 'utf8');
+      res.sendFile(__dirname + "/Website/profile_details.html");
     // }
 });
 

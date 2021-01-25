@@ -24,10 +24,6 @@
 
         var serverMsg;
 
-        $(document).ready(function () {
-            GetDataFromServer();
-        });
-
         function GetDataFromServer() {
             var http = new XMLHttpRequest();
             var url = document.location;
@@ -292,7 +288,7 @@
 
 </head>
 
-<body id="page-top" >
+<body id="page-top" onload="GetDataFromServer();" >
 
     <!-- Page Wrapper -->
     <div id="wrapper">

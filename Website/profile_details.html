@@ -26,20 +26,20 @@
 
         function GetUserName() {
 
-            var xmlHttp = new XMLHttpRequest();
+            // var xmlHttp = new XMLHttpRequest();
 
-            xmlHttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    sessionStorage.setItem("fullname", xmlHttp.responseText);
-                    if (sessionStorage.getItem("fullname") == "") {
-                        window.location.replace("/login");
-                    }
-                    document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
-                }
-            };
+            // xmlHttp.onreadystatechange = function () {
+            //     if (this.readyState == 4 && this.status == 200) {
+            //         sessionStorage.setItem("fullname", xmlHttp.responseText);
+            //         if (sessionStorage.getItem("fullname") == "") {
+            //             window.location.replace("/login");
+            //         }
+            //         document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
+            //     }
+            // };
 
-            xmlHttp.open("GET", '/getdata', false); // false for synchronous request
-            xmlHttp.send();
+            // xmlHttp.open("GET", '/getdata', false); // false for synchronous request
+            // xmlHttp.send();
 
         }
 
@@ -49,7 +49,6 @@
             var params = 'todo=1&email=' + 'param1Place';
 
             http.open('POST', url, true);
-            http.send(params);
 
             //Send the proper header information along with the request
             http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -82,6 +81,7 @@
                     }
                 }
             }
+            http.send(params);
         }
 
         function UpdateDetails(firstname, lastname, phone, country, email, city, street, zipCode) {

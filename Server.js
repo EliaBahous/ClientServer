@@ -464,6 +464,7 @@ app.post('/profileDetails', function (req, res) {
             //Change password  
             console.log('case 3');
             UpdateUserPassword(req);
+            sendEmail(req.body.email,"Password was change!")
             res.redirect("/profileDetails");
              break;
         case '4':

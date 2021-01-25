@@ -21,7 +21,24 @@
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="validation.js"></script>
+    <script>
+                                      
+        document.getElementById("invalidData").style.visibility = 'hidden';
+        document.getElementById("invalidData").style.color = 'red';
+        function check(){
+            var loginRes =""
+            loginRes =  checkRecaptcha();
+            loginRes += validateRegister();
+            if(loginRes == ""){
+                document.getElementById("loginbu").innerHTML= '<button id="registerButton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
+            }else{
+                document.getElementById("invalidData").innerHTML = loginRes;
+                document.getElementById("invalidData").style.visibility = 'visible'
+            }
+         
+        }
 
+    </script>
 </head>
 
 <body class="bg-gradient-primary">
@@ -39,24 +56,7 @@
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
                             <form class="user" action="/addUser" method="POST">
-                                <script>
-                                      
-                                    document.getElementById("invalidData").style.visibility = 'hidden';
-                                    document.getElementById("invalidData").style.color = 'red';
-                                    function check(){
-                                        var loginRes =""
-                                        loginRes =  checkRecaptcha();
-                                        loginRes += validateRegister();
-                                        if(loginRes == ""){
-                                            document.getElementById("loginbu").innerHTML= '<button id="registerButton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
-                                        }else{
-                                            document.getElementById("invalidData").innerHTML = loginRes;
-                                            document.getElementById("invalidData").style.visibility = 'visible'
-                                        }
-                                     
-                                    }
-     
-                                </script>
+
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" name="firstname" id="firstname"
@@ -86,7 +86,7 @@
                                         <input type="text" class="form-control form-control-user" name="promocode"
                                             placeholder="Promo Code">
                                     </div>
-                                    <span id="invalidData">Check Data</span>
+                                    <span id="invalidData"></span>
 
                                 </div>
                     

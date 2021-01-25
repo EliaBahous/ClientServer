@@ -14,7 +14,6 @@ function validateRegister(){
 	passwordStr2 = document.getElementById("password2").value;
 	firstNameStr = document.getElementById("firstname").value;
 	lastNameStr = document.getElementById("lastname").value;
-	promoCode =  document.getElementById("promocode").value;
 	var res= "";
 	res += ValidateEmail(emailStr);
 	res += ValidatePassword(passwordStr1);
@@ -22,7 +21,7 @@ function validateRegister(){
 	res += textEqual(passwordStr1,passwordStr2);
 	res += validateName(firstNameStr);
 	res += validateName(lastNameStr);
-
+	window.alert(res);
 
 	return res;
 }
@@ -33,6 +32,8 @@ function validateLogin(){
 	var res = ""
 	res += ValidateEmail(emailStr)
 	res += ValidatePassword(passwordStr)
+	window.alert(res);
+
 	return res;
 }
 

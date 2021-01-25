@@ -427,8 +427,7 @@ app.get('/profileDetails', function (req, res) {
     let data = fs.readFileSync(__dirname + "/Website/profile_details.html", 'utf8');
     if(data)
     {
-      // res.send(data.replace('param1Place',req.session.email));
-      res.send(data.replace('param1Place',"mati7529992@gmail.com"));
+      res.send(data.replace('param1Place',req.session.email));
     }
     else
     {

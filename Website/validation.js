@@ -33,9 +33,7 @@ function validateLogin(){
 	passwordStr = document.getElementById("password").value;
 	var res = ""
 	res += ValidateEmail(emailStr)
-	if(res!=""){
-		window.alert(res);
-	}
+
 	return res;
 }
 
@@ -45,7 +43,7 @@ function ValidateEmail(email)
 	
 	if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)))
 	{
-		res += "You have entered an invalid email address!\n"
+		res += "You have entered an invalid email address!<br>"
 	}
 	
 	return res
@@ -55,7 +53,7 @@ function validateName(str){
 	if (/^[a-zA-Z]+$/.test(str) && str.length>0) {
 		return "";
 	}
-	return " Name or Last Name just letters";
+	return " Name or Last Name just letters<br>";
 }
 
 function ValidatePassword(password){
@@ -63,23 +61,23 @@ function ValidatePassword(password){
 	var res=""
 	
 	if(password.length <6 )
-		res+= ("Password Length must be more than 6!\n")
+		res+= ("Password Length must be more than 6!<br>")
 	
 	var upperCaseLetters = /[A-Z]/g;
 	if(!password.match(upperCaseLetters)) 
-		res+= ("Password must include at least 1 upper case letters\n")
+		res+= ("Password must include at least 1 upper case letters<br>")
 	
 
 	if(!password.match(/[a-z]/)) 
-		res+= ("Password must include at least 1 lower case letters\n")
+		res+= ("Password must include at least 1 lower case letters<br>")
 	
 	var numLetters = /[0-9]/g;
 	if(!password.match(numLetters)) 
-		res+= ("Password must include at least 1 number\n")
+		res+= ("Password must include at least 1 number<br>")
 	
 	var specialLetters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 	if(!password.match(specialLetters)) 
-		res+= ("Password must include at least 1 special letter\n")
+		res+= ("Password must include at least 1 special letter<br>")
 	
 	
 	return res

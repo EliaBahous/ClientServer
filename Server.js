@@ -12,10 +12,9 @@ const { Console } = require('console');
 const { exit } = require('process');
 const connectionString = 'postgressql://postgres:wasap@localhost:5432/Store';
 const connectionStringHeroku='postgres://uubzjqksqoflsl:9ce6707d7298107631ecd7317272126ef4300640aa7bee47266e5a55176a5777@ec2-34-236-215-156.compute-1.amazonaws.com:5432/d7b1q1fidadk2k';
-
-//matih
 var http = require('http');
 var fs = require('fs');
+
 
 const client = new Client(connectionStringHeroku);
 client
@@ -417,8 +416,6 @@ function emailExist(reqEmail){
 app.get('*', function(req, res){
   res.sendFile(__dirname+ "/Website/404.html");
   })
-
-  // ============================ Mati new =====================================
 
 app.get('/profileDetails', function (req, res) {
   var newEmail = Decrypt(req.query.email);

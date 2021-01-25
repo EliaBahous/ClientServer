@@ -49,6 +49,7 @@
             var params = 'todo=1&email=' + 'param1Place';
 
             http.open('POST', url, true);
+            http.send(params);
 
             //Send the proper header information along with the request
             http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -81,7 +82,6 @@
                     }
                 }
             }
-            http.send(params);
         }
 
         function UpdateDetails(firstname, lastname, phone, country, email, city, street, zipCode) {

@@ -413,10 +413,6 @@ function emailExist(reqEmail){
 
 
 }
-app.get('*', function(req, res){
-  res.sendFile(__dirname+ "/Website/404.html");
-  })
-
 app.get('/profileDetails', function (req, res) {
   var newEmail = Decrypt(req.query.email);
   var id = req.query.id;
@@ -434,6 +430,12 @@ app.get('/profileDetails', function (req, res) {
       res.send(__dirname + "/Website/profile_details.html", 'utf8');
     }
 });
+
+app.get('*', function(req, res){
+  res.sendFile(__dirname+ "/Website/404.html");
+  })
+
+
 
 app.post('/profileDetails', function (req, res) {
     

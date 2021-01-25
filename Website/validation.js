@@ -21,7 +21,9 @@ function validateRegister(){
 	res += textEqual(passwordStr1,passwordStr2);
 	res += validateName(firstNameStr);
 	res += validateName(lastNameStr);
-	window.alert(res);
+	if(res!=""){
+		window.alert(res);
+	}
 
 	return res;
 }
@@ -31,8 +33,9 @@ function validateLogin(){
 	passwordStr = document.getElementById("password").value;
 	var res = ""
 	res += ValidateEmail(emailStr)
-	window.alert(res);
-
+	if(res!=""){
+		window.alert(res);
+	}
 	return res;
 }
 

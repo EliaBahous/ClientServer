@@ -31,7 +31,6 @@ function validateLogin(){
 	passwordStr = document.getElementById("password").value;
 	var res = ""
 	res += ValidateEmail(emailStr)
-	res += ValidatePassword(passwordStr)
 	window.alert(res);
 
 	return res;

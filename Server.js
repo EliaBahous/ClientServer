@@ -206,8 +206,6 @@ app.get('/getdata',function detData(req,res){
   if(flag==0)
     res.send("");
 
-  //matih
-  res.end();
 });
 
 app.get('/login?mode=f',function detData(req,res){

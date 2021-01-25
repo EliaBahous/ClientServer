@@ -592,7 +592,7 @@
                                     <span id="username"></span>
                                     <script>
                                         var xmlHttp = new XMLHttpRequest();
-                                        xmlHttp.open("GET",'/getdata',false); // false for synchronous request
+                                        xmlHttp.open("GET",'/getdata',true); // false for synchronous request
                                         xmlHttp.send(null);
                                         sessionStorage.setItem("fullname", xmlHttp.responseText);
                                         if(sessionStorage.getItem("fullname") == ""){

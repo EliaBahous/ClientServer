@@ -21,10 +21,6 @@ function validateRegister(){
 	res += textEqual(passwordStr1,passwordStr2);
 	res += validateName(firstNameStr);
 	res += validateName(lastNameStr);
-	if(res!=""){
-		window.alert(res);
-	}
-
 	return res;
 }
 

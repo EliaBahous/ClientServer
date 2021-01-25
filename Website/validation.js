@@ -69,16 +69,16 @@ function ValidatePassword(password){
 	if(!password.match(upperCaseLetters)) 
 		res+= ("Password must include at least 1 upper case letters\n")
 	
-	var lowerCaseLetters = /[a-z]/g;
-	if(!password.match(lowerCaseLetters)) 
+
+	if(!password.match(/[a-z]/)) 
 		res+= ("Password must include at least 1 lower case letters\n")
 	
 	var numLetters = /[0-9]/g;
 	if(!password.match(numLetters)) 
 		res+= ("Password must include at least 1 number\n")
 	
-	var specialLetters = /^[!@#$%^&*()_+\-=\[\]{};':"\\|.<>\/?]/;
-	if(!password.match(specialLetters)) 
+	var specialLetters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+	if(!password.test(specialLetters)) 
 		res+= ("Password must include at least 1 special letter\n")
 	
 	

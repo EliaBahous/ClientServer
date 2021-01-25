@@ -447,7 +447,8 @@ app.post('/profileDetails', function (req, res) {
     switch (req.body.todo) {
         case '1':
           //Enter the screen  
-           GetUserDataToClient(res,req.body.email);
+           GetUserDataToClient(res,req.session.email);
+          //  GetUserDataToClient(res,req.body.email);
            console.log('case 1');
 
            break;

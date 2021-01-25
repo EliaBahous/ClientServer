@@ -24,6 +24,26 @@
 
         var serverMsg;
 
+        function GetUserName() {
+
+            var xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    sessionStorage.setItem("fullname", xmlHttp.responseText);
+                    if (sessionStorage.getItem("fullname") == "") {
+                        window.location.replace("/login");
+                    }
+                    document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
+                    console.log(username);
+                }
+            };
+
+            xmlHttp.open("GET", '/getdata', false); // false for synchronous request
+            xmlHttp.send();
+
+        }
+
         function GetDataFromServer() {
             var http = new XMLHttpRequest();
             var url = document.location;
@@ -79,8 +99,7 @@
             SetField(zipCode, "zipCode");
         }
 
-        function updateData()
-        {
+        function updateData() {
             var msg = "";
             msg = checkField("firstname");
             msg += checkField("lastname");
@@ -91,8 +110,7 @@
             msg += checkField("street");
             msg += checkField("zipCode");
 
-            if(msg!="")
-            {
+            if (msg != "") {
                 alert("You can't delete data from the fields: " + msg);
                 return false;
             }
@@ -118,7 +136,7 @@
         function SendVarificationMail(email) {
             var http = new XMLHttpRequest();
             var url = document.location;
-            var params = ['todo=4', 'email=' + email,'id=' + idClient];
+            var params = ['todo=4', 'email=' + email, 'id=' + idClient];
 
             http.open('POST', url, true);
 
@@ -136,12 +154,10 @@
             }
         };
 
-        function checkField(field)
-        {
+        function checkField(field) {
             var input = document.getElementById(field.toString()).value;
-            if(input.trim()== "" && changeMap[field.toString()] == "not allow")
-            {
-                return "\n"+field.toString();
+            if (input.trim() == "" && changeMap[field.toString()] == "not allow") {
+                return "\n" + field.toString();
             }
             return "";
         }
@@ -155,11 +171,11 @@
             if (error_match_password_svg.hidden && error_numberMsg_svg.hidden && error_long6Msg_svg.hidden) {
                 return true;
             }
-            else{
+            else {
                 alert("Check passwords!");
                 return false;
             }
-           
+
         };
     </script>
 
@@ -288,7 +304,7 @@
 
 </head>
 
-<body id="page-top"  >
+<body id="page-top" onload="GetUserName();GetDataFromServer();" >
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -585,29 +601,13 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="fullnamenav">
-                               
+                            
                                     <span id="username"></span>
                                     <script>
-                                        var xmlHttp = new XMLHttpRequest();
 
-                                        xmlHttp.onreadystatechange = function()
-                                        {
-                                            if (this.readyState == 4 && this.status == 200){
-                                            sessionStorage.setItem("fullname", xmlHttp.responseText);
-                                            if (sessionStorage.getItem("fullname") == "") {
-                                                window.location.replace("/login");
-                                            }
-                                            document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
-                                            console.log(username);
-                                            }
-                                        };
-
-                                        xmlHttp.open("GET",'/getdata',false); // false for synchronous request
-                                        xmlHttp.send();
-                                        
                                     </script>
                             </a>
                             <!-- Dropdown - User Information -->
@@ -652,7 +652,7 @@
                         </div>
                        
                         <form id="profile_details" action="/profileDetails" method="POST"
-                            onsubmit="return updateData();" onload="GetDataFromServer();">
+                            onsubmit="return updateData();" >
                             <div class="row">
                                 <div class="col-6 col-md-3">
                                     <label for="firstname" class="form-label">First name</label>

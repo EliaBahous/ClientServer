@@ -78,7 +78,7 @@ function ValidatePassword(password){
 		res+= ("Password must include at least 1 number\n")
 	
 	var specialLetters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-	if(!password.test(specialLetters)) 
+	if(!password.match(specialLetters)) 
 		res+= ("Password must include at least 1 special letter\n")
 	
 	

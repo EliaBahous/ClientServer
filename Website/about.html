@@ -27,17 +27,23 @@
     
     function GetUserName() {
 
-var xmlHttp = new XMLHttpRequest();
+            var xmlHttp = new XMLHttpRequest();
 
-xmlHttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        sessionStorage.setItem("fullname", xmlHttp.responseText);
-        if (sessionStorage.getItem("fullname") == "") {
-            window.location.replace("/login");
-        }
-        document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
-    }
-};
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    sessionStorage.setItem("fullname", xmlHttp.responseText);
+                    if (sessionStorage.getItem("fullname") == "") {
+                        window.location.replace("/login");
+                    }
+                    document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
+                }
+            };
+
+xmlHttp.open("GET", '/getdata', false); // false for synchronous request
+xmlHttp.send();
+
+}
+
 
     function SendMail(){
         window.open('mailto:test@example.com');

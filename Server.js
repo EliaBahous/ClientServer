@@ -415,22 +415,22 @@ function emailExist(reqEmail){
 
 }
 app.get('/profileDetails', function (req, res) {
-  var newEmail = Decrypt(req.query.email);
-  var id = req.query.id;
-    if(newEmail)
-    {
-      UpdateUserEmail(newEmail,id);
-    }
-    let data = fs.readFileSync(__dirname + "/Website/profile_details.html", 'utf8');
-    if(data)
-    {
-      res.send(data.replace('param1Place',req.session.email));
-    }
-    else
-    {
+  // var newEmail = Decrypt(req.query.email);
+  // var id = req.query.id;
+  //   if(newEmail)
+  //   {
+  //     UpdateUserEmail(newEmail,id);
+  //   }
+  //   let data = fs.readFileSync(__dirname + "/Website/profile_details.html", 'utf8');
+  //   if(data)
+  //   {
+  //     res.send(data.replace('param1Place',req.session.email));
+  //   }
+  //   else
+  //   {
       
       res.sendFile(__dirname + "/Website/profile_details.html");
-    }
+    // }
 });
 
 app.get('*', function(req, res){

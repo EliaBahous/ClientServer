@@ -39,6 +39,12 @@ xmlHttp.onreadystatechange = function () {
     }
 };
 
+xmlHttp.open("GET", '/getdata', false); // false for synchronous request
+xmlHttp.send();
+
+}
+
+
     function SendMail(){
         window.open('mailto:test@example.com');
     }

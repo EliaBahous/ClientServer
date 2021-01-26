@@ -429,8 +429,9 @@ app.get('/profileDetails', function (req, res) {
   //   else
   //   {
       
-      res.sendFile(__dirname + "/Website/profile_details.html");
     // }
+    res.sendFile(__dirname + "/Website/profile_details.html");
+
 });
 
 app.get('*', function(req, res){

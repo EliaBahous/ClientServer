@@ -123,7 +123,9 @@
 
         function CheckEmail() {
             if (emailFalg) {
-                var emailField = document.getElementById("email").value;
+                var emailField = document.getElementById("email");
+                alert(emailField);
+                alert("value : "+ emailField.value);
                 let validEmailMsg = ValidateEmail(emailField);
                 validEmailMsg = validEmailMsg.substring(0, 41);
                 if (validEmailMsg != "") {

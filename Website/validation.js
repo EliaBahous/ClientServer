@@ -58,13 +58,6 @@ function ValidatePassword(password){
 	if(password.length <6 )
 		res+= ("Password Length must be more than 6!<br>")
 	
-	var upperCaseLetters = /[A-Z]/g;
-	if(password.match(upperCaseLetters) || password.match(/[a-z]/)){
-		res+=""
-	}else{
-		res+= ("Password must include at least 1 upper case letters<br>")
-	
-	}
 
 	var numLetters = /[0-9]/g;
 	if(!password.match(numLetters)) 

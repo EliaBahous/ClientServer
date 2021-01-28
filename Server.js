@@ -37,10 +37,40 @@ app.listen(port, function(){
 
 app.use(express.static(__dirname+'/Website'));
 
+app.get('/about',function(req,res){
+  console.log("About-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/about.html");
+})
 
 app.post('/login', function(req, res) {
     console.log("LOGIN-POST-current request: " +req.session.email);
     checkClient(req,res);
+});
+
+app.get('/laptop', function(req, res) {
+  console.log("laptop-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/blanklaptop.html");
+});
+
+
+app.get('/pc', function(req, res) {
+  console.log("laptop-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/blankpc.html");
+});
+
+app.get('/lg', function(req, res) {
+  console.log("laptop-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/blanklg.html");
+});
+
+app.get('/iphone', function(req, res) {
+  console.log("laptop-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/blankphones.html");
+});
+
+app.get('/samsung', function(req, res) {
+  console.log("laptop-GET-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/blanksamsung.html");
 });
 
 app.get('/insertSuccess',function(req,res){
@@ -140,6 +170,11 @@ app.post('/updatePassword',function(req,res){
 
   console.log("Update-password-POST-current request: " +email+"");
   updatePassword(email,pass,req,res);
+});
+
+app.get('/soon', function(req, res) {
+  console.log("HOME-current request: " +req.session.email);
+  res.sendFile(__dirname+ "/Website/blanksoon.html");
 });
 
 app.get('/home', function(req, res) {

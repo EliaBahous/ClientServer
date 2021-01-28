@@ -37,15 +37,15 @@ app.listen(port, function(){
 
 app.use(express.static(__dirname+'/Website'));
 app.get('/',function(req,res){
-  res.redirect('/login')
+  res.redirect('/sign-in')
 })
 app.get('/about',function(req,res){
   console.log("About-GET-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/about.html");
 })
 
-app.post('/login', function(req, res) {
-    console.log("LOGIN-POST-current request: " +req.session.email);
+app.post('/sign-in', function(req, res) {
+    console.log("sign-in-POST-current request: " +req.session.email);
     checkClient(req,res);
 });
 
@@ -192,7 +192,7 @@ app.get('/updatePassword',function(req,res){
 app.get('/register', function(req, res) {
   res.sendFile(__dirname+ "/Website/register.html");
 });
-app.get('/login', function(req, res) {
+app.get('/sign-in', function(req, res) {
     sess = req.session;
     var i=0;
     var flag = 0;
@@ -225,7 +225,7 @@ app.get('/logout', function(req, res) {
       
     }
   }
-  res.redirect('/login');
+  res.redirect('/sign-in');
 });
 
 app.get('/getdata',function detData(req,res){
@@ -245,7 +245,7 @@ app.get('/getdata',function detData(req,res){
 
 });
 
-app.get('/login?mode=f',function detData(req,res){
+app.get('/sign-in?mode=f',function detData(req,res){
   console.log("LOGINFAILD-GET-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/login.html");
 });
@@ -284,7 +284,7 @@ function checkClient(req,res) {
         res.session = sess;
         res.redirect('/home');
       }else{
-        res.redirect('/login?mode=f');
+        res.redirect('/sign-in?mode=f');
       }
     });
   }
@@ -395,7 +395,7 @@ function insertData(index,res,req,id){
          throw err;
       }
       sendEmail(reqEmail,"You have created account successfully : email = " +reqEmail + " Password = "+reqPassword);
-      res.redirect("/login");
+      res.redirect("/sign-in");
     });
     insertRequests['Requests'].pop(insertRequests['Requests'][index]);
 }

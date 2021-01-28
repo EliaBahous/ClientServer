@@ -170,7 +170,7 @@
                                         xmlHttp.send(null);
                                         sessionStorage.setItem("fullname", xmlHttp.responseText);
                                         if(sessionStorage.getItem("fullname") == ""){
-                                            window.location.replace("/login");
+                                            window.location.replace("/sign-in");
                                         }
                                         document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
                                         console.log(username);

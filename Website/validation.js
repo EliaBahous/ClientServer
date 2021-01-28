@@ -2,7 +2,7 @@
 function checkRecaptcha() {
   var response = grecaptcha.getResponse();
   if(response.length == 0) { 
-  	return "You must Check reCaptcha\n";
+  	return "You must Check reCaptcha<br>";
   }else{
 	return "";
   }
@@ -17,7 +17,6 @@ function validateRegister(){
 	var res= "";
 	res += ValidateEmail(emailStr);
 	res += ValidatePassword(passwordStr1);
-	res += ValidatePassword(passwordStr2);
 	res += textEqual(passwordStr1,passwordStr2);
 	res += validateName(firstNameStr);
 	res += validateName(lastNameStr);
@@ -60,21 +59,18 @@ function ValidatePassword(password){
 		res+= ("Password Length must be more than 6!<br>")
 	
 	var upperCaseLetters = /[A-Z]/g;
-	if(!password.match(upperCaseLetters)) 
+	if(password.match(upperCaseLetters) || password.match(/[a-z]/)){
+		res+=""
+	}else{
 		res+= ("Password must include at least 1 upper case letters<br>")
 	
+	}
 
-	if(!password.match(/[a-z]/)) 
-		res+= ("Password must include at least 1 lower case letters<br>")
-	
 	var numLetters = /[0-9]/g;
 	if(!password.match(numLetters)) 
 		res+= ("Password must include at least 1 number<br>")
 	
-	var specialLetters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-	if(!password.match(specialLetters)) 
-		res+= ("Password must include at least 1 special letter<br>")
-	
+
 	
 	return res
 		

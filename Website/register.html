@@ -30,7 +30,7 @@
             loginRes =  checkRecaptcha();
             loginRes += validateRegister();
             if(loginRes == ""){
-                document.getElementById("loginbu").innerHTML= '<button id="registerButton" class="btn btn-primary btn-user btn-block" type="submit">Login</button>'
+                document.getElementById("loginbu").innerHTML= '<button id="registerButton" class="btn btn-primary btn-user btn-block" type="submit">Register Account</button>'
             }else{
                 document.getElementById("invalidData").innerHTML = loginRes;
                 document.getElementById("invalidData").style.visibility = 'visible'

@@ -98,14 +98,14 @@ app.post('/addUser', function(req, res) {
   var checkEmail = emailExist(reqEmail)
   checkEmail.then((x)=>{
       if(x==2){
-        res.redirect("/register?mode=f&email="+reqEmail);
+        res.redirect("/sign-up?mode=f&email="+reqEmail);
 
       }else{
         if(reqPromoCode!=""){
           var checkPromo = checkPromoCode(reqPromoCode);
           checkPromo.then((y)=>{
               if(y==2){
-                res.redirect("/register?mode=f&email="+reqEmail+"&promoCode=undefiend");
+                res.redirect("/sign-up?mode=f&email="+reqEmail+"&promoCode=undefiend");
               }else{
                 insertRequests['Requests'].push({
                   email: reqEmail,
@@ -117,7 +117,7 @@ app.post('/addUser', function(req, res) {
                 
                   message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
                   sendEmail(reqEmail+"",message);
-                  res.redirect("/register?mode=t");
+                  res.redirect("/sign-up?mode=t");
                
               
               }
@@ -133,7 +133,7 @@ app.post('/addUser', function(req, res) {
           
             message = "https://eliabahous.herokuapp.com/insertSuccess?email="+Encrypt(reqEmail);
             sendEmail(reqEmail+"",message);
-            res.redirect("/register?mode=t");
+            res.redirect("/sign-up?mode=t");
         
         
       }
@@ -143,21 +143,21 @@ app.post('/addUser', function(req, res) {
 
 });
 
-app.post('/forgetPassword', function(req, res) {
+app.post('/reset-password', function(req, res) {
   console.log("FORGET-PASSWORD-current request: " +req.session.email);
   checkEmail(req.body.id,req,res);
 });
-app.get('/forgetPassword', function(req, res) {
+app.get('/reset-password', function(req, res) {
   console.log("FORGET-PASSWORD-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/forgot-password.html");
 });
 
-app.get('/forgetPassword?mode=f', function(req, res) {
+app.get('/reset-password?mode=f', function(req, res) {
   console.log("FORGET-FALSE-PASSWORD-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/forgot-password.html");
 });
 
-app.get('/forgetPassword?mode=t', function(req, res) {
+app.get('/reset-password?mode=t', function(req, res) {
   console.log("FORGET-TRUE-PASSWORD-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/forgot-password.html");
 });
@@ -179,7 +179,7 @@ app.get('/soon', function(req, res) {
   res.sendFile(__dirname+ "/Website/blanksoon.html");
 });
 
-app.get('/home', function(req, res) {
+app.get('/dashboard', function(req, res) {
   console.log("HOME-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/buy.html");
 });
@@ -189,7 +189,7 @@ app.get('/updatePassword',function(req,res){
   res.sendFile(__dirname+ "/Website/update-password.html");
 
 });
-app.get('/register', function(req, res) {
+app.get('/sign-up', function(req, res) {
   res.sendFile(__dirname+ "/Website/register.html");
 });
 app.get('/sign-in', function(req, res) {
@@ -282,7 +282,7 @@ function checkClient(req,res) {
         });
         sessions.push(sess);
         res.session = sess;
-        res.redirect('/home');
+        res.redirect('/dashboard');
       }else{
         res.redirect('/sign-in?mode=f');
       }
@@ -294,7 +294,7 @@ function checkClient(req,res) {
 function checkSession(res,req){
   for(i=0;i<sessions.length;i++){
       if(req.session && sessions[i].email == req.session.email){
-        res.redirect("/home");
+        res.redirect("/dashboard");
         return 1;
       }
     }
@@ -306,7 +306,7 @@ function updatePassword(email,password,req,res){
   const values = [email,password];
   client.query(text,values, (err, result)=>{
     if (err){
-      res.redirect('/forgetPassword');
+      res.redirect('/reset-password');
       throw err;
     }
     console.log(result + " " + values);
@@ -330,9 +330,9 @@ function checkEmail(email,req,res){
       });
       let message = "https://eliabahous.herokuapp.com/updatePassword?email="+Encrypt(email);
       sendEmail(email,message);
-      res.redirect("/forgetPassword?mode=t")
+      res.redirect("/reset-password?mode=t")
     }else{
-      res.redirect('/forgetPassword?mode=f');
+      res.redirect('/reset-password?mode=f');
     }
   });
 

@@ -68,9 +68,9 @@
 
                                             if(sessionStorage.getItem("fullname") != ""){
                                                 var xmlHttp = new XMLHttpRequest();
-                                                xmlHttp.open("GET",'/home',false); // false for synchronous request
+                                                xmlHttp.open("GET",'/dashboard',false); // false for synchronous request
                                                 xmlHttp.send(null);
-                                                window.location.replace("/home");
+                                                window.location.replace("/dashboard");
                                             }
                                             function check(){
                                                 var loginRes = "";
@@ -108,10 +108,10 @@
                                     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
                                     <hr>
                                     <div class="text-center">
-                                        <a  class="small" href="forgetPassword">Forgot Password?</a>
+                                        <a  class="small" href="reset-password">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="register">Create an Account!</a>
+                                        <a class="small" href="sign-up">Create an Account!</a>
                                     </div>
                                 </div>
                             </div>

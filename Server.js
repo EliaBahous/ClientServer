@@ -36,7 +36,9 @@ app.listen(port, function(){
 /************************Functions for request************************/
 
 app.use(express.static(__dirname+'/Website'));
-
+app.get('/',function(req,res){
+  res.redirect('/login')
+})
 app.get('/about',function(req,res){
   console.log("About-GET-current request: " +req.session.email);
   res.sendFile(__dirname+ "/Website/about.html");

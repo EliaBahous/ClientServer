@@ -10,13 +10,13 @@ const e = require('express');
 var CryptoJS = require("crypto-js");
 const { Console } = require('console');
 const { exit } = require('process');
-const connectionString = 'postgressql://postgres:wasap@localhost:5432/Store';
+const connectionString = 'postgressql://postgres:wasap@localhost:5432/postgres';
 const connectionStringHeroku='postgres://uubzjqksqoflsl:9ce6707d7298107631ecd7317272126ef4300640aa7bee47266e5a55176a5777@ec2-34-236-215-156.compute-1.amazonaws.com:5432/d7b1q1fidadk2k';
 var http = require('http');
 var fs = require('fs');
 
-
-const client = new Client(connectionStringHeroku);
+//matih
+const client = new Client(connectionString);
 client
   .connect()
   .then(() => console.log('connected'))
@@ -211,6 +211,7 @@ app.get('/sign-in', function(req, res) {
         res.sendFile(__dirname+ "/Website/login.html");
       }
     }
+    
 });
 app.get('/logout', function(req, res) {
   sess = req.session;
@@ -229,6 +230,7 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/getdata',function detData(req,res){
+ 
   sess = req.session;
   var i=0;
   flag=0;
@@ -479,14 +481,16 @@ app.get('*', function(req, res){
 
 app.post('/profileDetails', function (req, res) {
     
-    // console.log(req);
-    // console.log("this is one req!!!!!!!!!!!\n\n");
     var msgLog ="";
+    console.log(req);
+
     switch (req.body.todo) {
         case '1':
           //Enter the screen  
+          //matih
+          req.session.email="mati7529992@gmail.com";
+
            GetUserDataToClient(res,req.session.email);
-          //  GetUserDataToClient(res,req.body.email);
            console.log('case 1');
 
            break;
@@ -494,7 +498,7 @@ app.post('/profileDetails', function (req, res) {
             //Update profile details  
             console.log('case 2');
             UpdateUserData(req);
-            sendEmail(req.body.email,"Data was change!")
+            sendEmail(req.session.email,"Data was change!")
             res.redirect("/profileDetails");
 
              break;
@@ -502,7 +506,7 @@ app.post('/profileDetails', function (req, res) {
             //Change password  
             console.log('case 3');
             UpdateUserPassword(req);
-            sendEmail(req.body.email,"Password was change!")
+            sendEmail(req.session.email,"Password was change!")
             res.redirect("/profileDetails");
              break;
         case '4':
@@ -520,7 +524,7 @@ app.post('/profileDetails', function (req, res) {
             });
 
             let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/profileDetails?email="+Encrypt(req.body.email)+"&id="+req.body.id;
-            sendEmail(req.body.email,message);
+            sendEmail(req.session.email,message);
             res.redirect("/profileDetails");
             
             break;
@@ -534,15 +538,25 @@ app.post('/profileDetails', function (req, res) {
 
 
 async function GetUserDataToClient(response,emailToGet){
-  const text = "SELECT id,name,familyname,phonenumber,country,email,city,street,zipcode,password FROM Users WHERE email=$1";
+  const text = "SELECT id,name,familyname,phonenumber,country,email,city,street,zipcode,password FROM users WHERE email=$1";
+
   const values = [emailToGet];
-  const res = await client.query(text,values);
-  SendUserDataToClient(response,res.rows[0].id,res.rows[0].name,res.rows[0].familyname,res.rows[0].phonenumber,res.rows[0].country,res.rows[0].email,res.rows[0].city,res.rows[0].street,res.rows[0].zipcode,Decrypt(res.rows[0].password))
+  const res = await client.query(text, values);
+  if (res.rowCount > 0) {
+    SendUserDataToClient(response, res.rows[0].id, res.rows[0].name, res.rows[0].familyname, res.rows[0].phonenumber, res.rows[0].country, res.rows[0].email, res.rows[0].city, res.rows[0].street, res.rows[0].zipcode, Decrypt(res.rows[0].password))
+  }
+  else { 
+    var errMsg = "Not data is found!";
+    console.log(errMsg);
+    res.setHeader('errMsg', errMsg);
+    response.end();
+   }
+
+
 
 }
 
 function SendUserDataToClient(res,id,firstname,lastname,phone,country,email,city,street,zipcode,password){
-  
   var arr = new Array(firstname,lastname,phone,country,email,city,street,zipcode,password);
   for (const property in arr) {
     if(arr[property] ==null)
@@ -568,9 +582,9 @@ function SendUserDataToClient(res,id,firstname,lastname,phone,country,email,city
 async function UpdateUserData(req)
 {
   const text = "UPDATE Users SET name=$1,familyname=$2,phonenumber=$3,country=$4,city=$5,street=$6,zipcode=$7 WHERE email=$8 ;";
-   const values = [req.body.firstname,req.body.lastname,req.body.phone,req.body.country,req.body.city,req.body.street,req.body.zipcode,req.body.email];
+   const values = [req.body.firstname,req.body.lastname,req.body.phone,req.body.country,req.body.city,req.body.street,req.body.zipCode,req.body.email];
   const result = await client.query(text,values);
-  console.log("\n\nUpdate Data!!!!!\n\n");
+  console.log("\nUpdate Data!!!!!\n");
 }
 
 async function UpdateUserPassword(req)

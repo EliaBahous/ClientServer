@@ -26,20 +26,21 @@
 
         function GetUserName() {
 
-            var xmlHttp = new XMLHttpRequest();
+            //matih
+            // var xmlHttp = new XMLHttpRequest();
+          
+            // xmlHttp.onreadystatechange = function () {
+            //     if (this.readyState == 4 && this.status == 200) {
+            //         sessionStorage.setItem("fullname", xmlHttp.responseText);
+            //         if (sessionStorage.getItem("fullname") == "") {
+            //             window.location.replace("/sign-in");
+            //         }
+            //         document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
+            //     }
+            // };
 
-            xmlHttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    sessionStorage.setItem("fullname", xmlHttp.responseText);
-                    if (sessionStorage.getItem("fullname") == "") {
-                        window.location.replace("/sign-in");
-                    }
-                    document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
-                }
-            };
-
-            xmlHttp.open("GET", '/getdata', false); // false for synchronous request
-            xmlHttp.send();
+            // xmlHttp.open("GET", '/getdata', false); // false for synchronous request
+            // xmlHttp.send();
 
         }
 
@@ -123,7 +124,10 @@
 
         function CheckEmail() {
             if (emailFalg) {
-                var emailField = document.getElementById("email");
+                var emailField = document.getElementById("email").value;
+                //matih
+                alert(emailField);
+
                 let validEmailMsg = ValidateEmail(emailField);
                 validEmailMsg = validEmailMsg.substring(0, 41);
                 if (validEmailMsg != "") {
@@ -134,14 +138,15 @@
                     alert("A verification email will be sent to you in your new email, after verification, the email will change!");
                     SendVarificationMail(emailField);
                 }
-                return true;
             }
+            return true;
+
         };
 
         function SendVarificationMail(email) {
             var http = new XMLHttpRequest();
             var url = document.location;
-            var params = ['todo=4', 'email=' + email, 'id=' + idClient];
+            var params = ['todo=4&email=' + email, '&id=' + idClient];
 
             http.open('POST', url, true);
 
@@ -281,6 +286,7 @@
 
         function edit_details() {
             $(".input_details").prop("disabled", false);
+            $("#update_btn").prop("disabled", false);
         };
     </script>
 
@@ -336,7 +342,7 @@
                     <span>Buy Page</span></a>
                 <a class="nav-link" href="/about">
                     <i class="far fa-address-card"></i>
-                    <span style="font-weight: 900; font-size: medium;">About us</span></a>
+                    <span>About us</span></a>
             </li>
         
             <!-- Divider -->
@@ -543,7 +549,7 @@
                             <div class="row d-grid d-md-flex justify-content-md-end">
                                 <input name="todo" style="visibility: hidden;" value="2">
                                 <input id="update_id" style="visibility: hidden;">
-                                <button type="submit" class="btn btn-link font-weight-bold">Update</button>
+                                <button id="update_btn" type="submit" class="btn btn-link font-weight-bold" disabled>Update</button>
                             </div>
                         </form>
                     </div>

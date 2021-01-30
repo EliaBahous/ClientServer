@@ -506,7 +506,7 @@ app.post('/profileDetails', function (req, res) {
             });
 
             let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/changeMail?email="+Encrypt(req.body.email)+"&id="+req.body.id;
-            sendEmail(req.session.email,message);
+            sendEmail(req.body.email,message);
             res.redirect("/profileDetails");
             
             break;

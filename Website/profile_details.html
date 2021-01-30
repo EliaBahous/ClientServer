@@ -26,21 +26,20 @@
 
         function GetUserName() {
 
-            //matih
-            // var xmlHttp = new XMLHttpRequest();
-          
-            // xmlHttp.onreadystatechange = function () {
-            //     if (this.readyState == 4 && this.status == 200) {
-            //         sessionStorage.setItem("fullname", xmlHttp.responseText);
-            //         if (sessionStorage.getItem("fullname") == "") {
-            //             window.location.replace("/sign-in");
-            //         }
-            //         document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
-            //     }
-            // };
+            var xmlHttp = new XMLHttpRequest();
 
-            // xmlHttp.open("GET", '/getdata', false); // false for synchronous request
-            // xmlHttp.send();
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    sessionStorage.setItem("fullname", xmlHttp.responseText);
+                    if (sessionStorage.getItem("fullname") == "") {
+                        window.location.replace("/sign-in");
+                    }
+                    document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
+                }
+            };
+
+            xmlHttp.open("GET", '/getdata', false); // false for synchronous request
+            xmlHttp.send();
 
         }
 
@@ -125,8 +124,7 @@
         function CheckEmail() {
             if (emailFalg) {
                 var emailField = document.getElementById("email").value;
-                //matih
-                alert(emailField);
+                
 
                 let validEmailMsg = ValidateEmail(emailField);
                 validEmailMsg = validEmailMsg.substring(0, 41);

@@ -15,8 +15,7 @@ const connectionStringHeroku='postgres://uubzjqksqoflsl:9ce6707d7298107631ecd731
 var http = require('http');
 var fs = require('fs');
 
-//matih
-const client = new Client(connectionString);
+const client = new Client(connectionStringHeroku);
 client
   .connect()
   .then(() => console.log('connected'))
@@ -454,21 +453,7 @@ function emailExist(reqEmail){
 
 }
 app.get('/profileDetails', function (req, res) {
-  // var newEmail = Decrypt(req.query.email);
-  // var id = req.query.id;
-  //   if(newEmail)
-  //   {
-  //     UpdateUserEmail(newEmail,id);
-  //   }
-  //   let data = fs.readFileSync(__dirname + "/Website/profile_details.html", 'utf8');
-  //   if(data)
-  //   {
-  //     res.send(data.replace('param1Place',req.session.email));
-  //   }
-  //   else
-  //   {
-      
-    // }
+ 
     res.sendFile(__dirname + "/Website/profile_details.html");
 
 });
@@ -482,14 +467,11 @@ app.get('*', function(req, res){
 app.post('/profileDetails', function (req, res) {
     
     var msgLog ="";
-    console.log(req);
 
     switch (req.body.todo) {
         case '1':
           //Enter the screen  
-          //matih
-          req.session.email="mati7529992@gmail.com";
-
+          
            GetUserDataToClient(res,req.session.email);
            console.log('case 1');
 
@@ -523,7 +505,7 @@ app.post('/profileDetails', function (req, res) {
               }
             });
 
-            let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/profileDetails?email="+Encrypt(req.body.email)+"&id="+req.body.id;
+            let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/changeMail?email="+Encrypt(req.body.email)+"&id="+req.body.id;
             sendEmail(req.session.email,message);
             res.redirect("/profileDetails");
             
@@ -551,8 +533,6 @@ async function GetUserDataToClient(response,emailToGet){
     res.setHeader('errMsg', errMsg);
     response.end();
    }
-
-
 
 }
 
@@ -604,3 +584,14 @@ async function UpdateUserEmail(newemail,id)
   console.log("\n\nUpdate Email!!!!!\n\n");
 }
 
+app.get('/changeMail',function(req,res){
+
+  console.log(req.query.email);
+  const reqEmail = Decrypt(req.query.email);
+  const reqId = req.query.id;
+
+  UpdateUserEmail(newEmail, id);
+
+  res.redirect("/profileDetails");
+
+});

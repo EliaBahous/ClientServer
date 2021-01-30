@@ -34,6 +34,8 @@
             }else{
                 document.getElementById("invalidData").innerHTML = loginRes;
                 document.getElementById("invalidData").style.visibility = 'visible'
+                grecaptcha.reset();
+
             }
          
         }

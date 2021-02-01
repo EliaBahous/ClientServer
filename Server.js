@@ -463,7 +463,7 @@ app.get('/profileDetails', function (req, res) {
     const reqEmail = Decrypt(req.query.email);
     const reqId = req.query.id;
 
-    UpdateUserEmail(newEmail, id);
+    UpdateUserEmail(reqEmail, reqId);
   }
     res.sendFile(__dirname + "/Website/profile_details.html");
 

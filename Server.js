@@ -470,23 +470,21 @@ app.get('/changeMail',function(req,res){
   const reqId = urlReq.searchParams.getAll("id")[0];
   const reqoldEmail = Decrypt(urlReq.searchParams.getAll("oemail")[0]);
   
-  // const reqEmail = Decrypt(req.query.email);
-  // const reqId = req.query.id;
-
   UpdateUserEmail(reqEmail, reqId);
-  // var i=0;
+   var i=0;
 
-  // if(sessions.length == 0){
-  //   res.sendFile(__dirname+ "/Website/login.html");
-  // }else{
-  //   for(i=0;i<sessions.length ;i++){
-  //     console.log( " -- " +sessions[i].email );
-  //     if(sessions[i].email == reqoldEmail){
-  //       sessions[i].email = reqEmail; 
-  //     }
-  //   }
-  //   req.session.email = reqEmail;
-
+   if(sessions.length == 0){
+     res.sendFile(__dirname+ "/Website/login.html");
+   }
+   else {
+     for (i = 0; i < sessions.length; i++) {
+       console.log(" -- " + sessions[i].email);
+       if (sessions[i].email == reqoldEmail) {
+         sessions[i].email = reqEmail;
+         req.session.email = reqEmail;
+       }
+     }
+   }
 
   res.redirect("/sign-in");
 

@@ -461,6 +461,19 @@ app.get('/profileDetails', function (req, res) {
 
 });
 
+//matih
+app.get('/changeMail',function(req,res){
+
+  console.log(req.query.email);
+  const reqEmail = Decrypt(req.query.email);
+  const reqId = req.query.id;
+
+  UpdateUserEmail(newEmail, id);
+
+  res.sendFile(__dirname + "/Website/profile_details.html");
+
+});
+
 app.get('*', function(req, res){
   res.sendFile(__dirname+ "/Website/404.html");
   })
@@ -589,14 +602,4 @@ async function UpdateUserEmail(newemail,id)
   console.log("\n\nUpdate Email!!!!!\n\n");
 }
 
-app.get('/changeMail',function(req,res){
 
-  console.log(req.query.email);
-  const reqEmail = Decrypt(req.query.email);
-  const reqId = req.query.id;
-
-  UpdateUserEmail(newEmail, id);
-
-  res.sendFile(__dirname + "/Website/profile_details.html");
-
-});

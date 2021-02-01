@@ -32,25 +32,25 @@
         var street;
         var zipcode;
 
-        function GetUserName() {
+        // function GetUserName() {
 
-            var xmlHttp = new XMLHttpRequest();
+        //     // var xmlHttp = new XMLHttpRequest();
 
-            xmlHttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    sessionStorage.setItem("fullname", xmlHttp.responseText);
-                    if (sessionStorage.getItem("fullname") == "") {
-                        window.location.replace("/sign-in");
-                    }
-                    document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
-                }
-            };
+        //     // xmlHttp.onreadystatechange = function () {
+        //     //     if (this.readyState == 4 && this.status == 200) {
+        //     //         sessionStorage.setItem("fullname", xmlHttp.responseText);
+        //     //         if (sessionStorage.getItem("fullname") == "") {
+        //     //             window.location.replace("/sign-in");
+        //     //         }
+        //     //         // document.getElementById("username").innerHTML = sessionStorage.getItem("fullname");
+        //     //     }
+        //     // };
 
-            // xmlHttp.open("GET", '/getdata', true); // false for synchronous request
-            xmlHttp.open("GET", '/getdata', false); // false for synchronous request
-            xmlHttp.send();
+        //     // // xmlHttp.open("GET", '/getdata', true); // false for synchronous request
+        //     // xmlHttp.open("GET", '/getdata', false); // false for synchronous request
+        //     // xmlHttp.send();
 
-        }
+        // }
 
         function GetDataFromServer() {
             var http = new XMLHttpRequest();
@@ -85,6 +85,10 @@
                         zipcode = http.getResponseHeader('zipcode');
 
                         oldpassword = http.getResponseHeader('password');
+
+                        //matih
+                        document.getElementById("username").innerHTML = firstname + lastname;
+
 
                         UpdateDetails(firstname, lastname, phone, country, oldemail, city, street, zipcode);
                     }
@@ -365,7 +369,7 @@
 
 </head>
 
-<body id="page-top" onload="GetUserName();GetDataFromServer();" >
+<body id="page-top" onload="GetDataFromServer();" >
 
     <!-- Page Wrapper -->
     <div id="wrapper">

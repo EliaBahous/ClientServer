@@ -554,7 +554,7 @@ async function GetUserDataToClient(response,emailToGet){
   else { 
     var errMsg = "Not data is found!";
     console.log(errMsg);
-    res.setHeader('errMsg', errMsg);
+    response.setHeader('errMsg', errMsg);
     response.end();
    }
 

@@ -608,7 +608,7 @@ async function UpdateUserPassword(req)
 
 async function UpdateUserEmail(newemail,id)
 {
-  const text = "UPDATE users SET email = $1::text WHERE id = $2 ;";
+  const text = "UPDATE users SET email = $1 WHERE id = $2 ;";
    const values = [newemail,id];
   const result = await client.query(text,values);
   console.log("\n\nUpdate Email!!!!!\n\n");

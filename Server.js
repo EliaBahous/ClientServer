@@ -459,9 +459,9 @@ app.get('/profileDetails', function (req, res) {
  
    if(req.query.email)
    {
-  //   console.log(req.query.email);
-  //   const reqEmail = Decrypt(req.query.email);
-  //   const reqId = req.query.id;
+    console.log(req.query.email);
+    const reqEmail = Decrypt(req.query.email);
+    const reqId = req.query.id;
 
   //   UpdateUserEmail(newEmail, id);
   }
@@ -604,7 +604,7 @@ async function UpdateUserPassword(req)
 
 async function UpdateUserEmail(newemail,id)
 {
-  const text = "UPDATE Users SET email=$1 WHERE id=$2 ;";
+  const text = "UPDATE public.users SET email = $1::text WHERE id = $2 ;";
    const values = [newemail,id];
   const result = await client.query(text,values);
   console.log("\n\nUpdate Email!!!!!\n\n");

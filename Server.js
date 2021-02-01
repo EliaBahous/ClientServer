@@ -465,9 +465,12 @@ app.get('/profileDetails', function (req, res) {
 //matih
 app.get('/changeMail',function(req,res){
 
-  console.log(req.query.email);
-  const reqEmail = Decrypt(req.query.email);
-  const reqId = req.query.id;
+  const urlReq = new URL("http:localhost//:"+port+req.url);
+  const reqEmail = Decrypt(urlReq.searchParams.getAll("email")[0]);
+  const reqId = urlReq.searchParams.getAll("id")[0];
+  
+  // const reqEmail = Decrypt(req.query.email);
+  // const reqId = req.query.id;
 
   UpdateUserEmail(reqEmail, reqId);
 

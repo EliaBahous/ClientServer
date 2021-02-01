@@ -14,8 +14,8 @@ const connectionString = 'postgressql://postgres:wasap@localhost:5432/postgres';
 const connectionStringHeroku='postgres://uubzjqksqoflsl:9ce6707d7298107631ecd7317272126ef4300640aa7bee47266e5a55176a5777@ec2-34-236-215-156.compute-1.amazonaws.com:5432/d7b1q1fidadk2k';
 var http = require('http');
 var fs = require('fs');
-
-const client = new Client(connectionStringHeroku);
+//matih
+const client = new Client(connectionString);
 client
   .connect()
   .then(() => console.log('connected'))
@@ -457,7 +457,7 @@ function emailExist(reqEmail){
 }
 app.get('/profileDetails', function (req, res) {
  
-  if(req.url.length > 'profileDetails'.length)
+  if(req.query.email)
   {
     console.log(req.query.email);
     const reqEmail = Decrypt(req.query.email);

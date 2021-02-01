@@ -81,10 +81,9 @@
                                                     if (document.getElementById('customCheck').checked) {
                                                         emailStr = document.getElementById("email").value;
                                                         passwordStr = document.getElementById("password").value;
-                                                        if(getCookie("email")=="" && emailStr!="" && passwordStr!=""){
                                                             setCookie("email", emailStr, 365);
                                                             setCookie("password",passwordStr,365);
-                                                        }
+                                                        
                                                     } 
                                                 }else{
                                                     grecaptcha.reset();

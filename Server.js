@@ -464,8 +464,12 @@ app.get('/profileDetails', function (req, res) {
     const reqId = req.query.id;
 
     UpdateUserEmail(reqEmail, reqId);
+    res.redirect("/profileDetails");
+
   }
+  else{
     res.sendFile(__dirname + "/Website/profile_details.html");
+  }
 
 });
 

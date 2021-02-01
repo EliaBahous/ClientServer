@@ -474,7 +474,7 @@ app.get('/changeMail',function(req,res){
 
   UpdateUserEmail(reqEmail, reqId);
 
-  res.redirect("/profileDetails");
+  res.redirect("/sign-in");
 
   // res.sendFile(__dirname + "/Website/profile_details.html");
 

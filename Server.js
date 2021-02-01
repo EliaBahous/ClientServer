@@ -528,7 +528,7 @@ app.post('/profileDetails', function (req, res) {
         case '4':
             //Send an email Validation  
             console.log('case 4');
-            
+            console.log(req.body.email);
             ////check if email is already exist
             let em = emailExist(req.body.email);
             em.then((val)=> {

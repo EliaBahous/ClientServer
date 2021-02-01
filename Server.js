@@ -493,7 +493,7 @@ app.post('/profileDetails', function (req, res) {
     switch (req.body.todo) {
         case '1':
           //Enter the screen  
-          
+          console.log("req.session.email:"+req.session.email);
            GetUserDataToClient(res,req.session.email);
            console.log('case 1');
 
@@ -545,7 +545,7 @@ app.post('/profileDetails', function (req, res) {
 
 async function GetUserDataToClient(response,emailToGet){
   const text = "SELECT id,name,familyname,phonenumber,country,email,city,street,zipcode,password FROM users WHERE email=$1";
-
+console.log("emailToGet"+emailToGet);
   const values = [emailToGet];
   const res = await client.query(text, values);
   if (res.rowCount > 0) {

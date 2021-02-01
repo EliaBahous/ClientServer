@@ -200,7 +200,7 @@
             alert("SendVarificationMail: "+email);
             var http = new XMLHttpRequest();
             var url = document.location;
-            var params = ['todo=4&email=' + email, '&id=' + idClient];
+            var params = ['todo=4&email=' + email+ '&id=' + idClient];
 
             http.open('POST', url, true);
 

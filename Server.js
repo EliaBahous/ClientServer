@@ -97,6 +97,8 @@ app.post('/addUser', function(req, res) {
   var checkEmail = emailExist(reqEmail)
   checkEmail.then((x)=>{
       if(x==2){
+        //matih
+        console.log("Email exist! line 100");
         res.redirect("/sign-up?mode=f&email="+reqEmail);
 
       }else{
@@ -433,7 +435,8 @@ function checkPromoCode(promoCode){
 }
 
 function emailExist(reqEmail){
-  const text = 'SELECT id,email,name,familyname FROM Users WHERE Email=$1';
+  console.log("email exist check!");
+  const text = 'SELECT * FROM Users WHERE Email=$1';
   const values = [reqEmail];
   return new Promise((resolve, reject) => {
 
@@ -497,18 +500,20 @@ app.post('/profileDetails', function (req, res) {
             
             ////check if email is already exist
             let em = emailExist(req.body.email);
-            em.then(function (val) {
+            em.then((val)=> {
               if (val == 2) {
                 var errText = "This email is already exist!";
                 res.setHeader('errMsg', errText);
                 res.end();
               }
+              else
+              {
+                let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/changeMail?email="+Encrypt(req.body.email)+"&id="+req.body.id;
+                sendEmail(req.body.email,message);
+                res.redirect("/profileDetails");
+              }
             });
 
-            let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/changeMail?email="+Encrypt(req.body.email)+"&id="+req.body.id;
-            sendEmail(req.body.email,message);
-            res.redirect("/profileDetails");
-            
             break;
         default:
             console.log(`Sorry, we are out of ${req.body.todo}.`);
@@ -592,6 +597,6 @@ app.get('/changeMail',function(req,res){
 
   UpdateUserEmail(newEmail, id);
 
-  res.redirect("/profileDetails");
+  res.sendFile(__dirname + "/Website/profile_details.html");
 
 });

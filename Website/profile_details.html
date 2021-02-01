@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Profile details</title>
+    <title>ESMM - Profile details</title>
 
     <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> -->
 
@@ -23,6 +23,14 @@
         var idClient;
 
         var serverMsg;
+
+        var firstname;
+        var lastname;
+        var phone;
+        var country;
+        var city;
+        var street;
+        var zipcode;
 
         function GetUserName() {
 
@@ -38,6 +46,7 @@
                 }
             };
 
+            // xmlHttp.open("GET", '/getdata', true); // false for synchronous request
             xmlHttp.open("GET", '/getdata', false); // false for synchronous request
             xmlHttp.send();
 
@@ -66,14 +75,14 @@
                         document.getElementById('cp_id').value = idClient;
                         document.getElementById('update_id').value = idClient;
 
-                        var firstname = http.getResponseHeader('firstname');
-                        var lastname = http.getResponseHeader('lastname');
-                        var phone = http.getResponseHeader('phone');
-                        var country = http.getResponseHeader('country');
+                        firstname = http.getResponseHeader('firstname');
+                        lastname = http.getResponseHeader('lastname');
+                        phone = http.getResponseHeader('phone');
+                        country = http.getResponseHeader('country');
                         oldemail = http.getResponseHeader('email');
-                        var city = http.getResponseHeader('city');
-                        var street = http.getResponseHeader('street');
-                        var zipcode = http.getResponseHeader('zipcode');
+                        city = http.getResponseHeader('city');
+                        street = http.getResponseHeader('street');
+                        zipcode = http.getResponseHeader('zipcode');
 
                         oldpassword = http.getResponseHeader('password');
 
@@ -100,14 +109,56 @@
 
         function updateData() {
             var msg = "";
-            msg = checkField("firstname");
-            msg += checkField("lastname");
-            msg += checkField("phone");
-            msg += checkField("country");
-            msg += checkField("email");
-            msg += checkField("city");
-            msg += checkField("street");
-            msg += checkField("zipCode");
+            var fieldString;
+
+            fieldString = checkField("firstname");
+            if(fieldString != "")
+            {
+                document.getElementById("firstname").value = firstname;
+                msg += fieldString;
+            }
+            fieldString = checkField("lastname");
+            if(fieldString != "")
+            {
+                document.getElementById("lastname").value = lastname;
+                msg += fieldString;
+            }
+            fieldString = checkField("phone");
+            if(fieldString != "")
+            {
+                document.getElementById("phone").value=phone;
+                msg += fieldString;
+            }
+            fieldString = checkField("country");
+            if(fieldString != "")
+            {
+                document.getElementById("country").value=country;
+                msg += fieldString;
+            }
+            fieldString = checkField("email");
+            if(fieldString != "")
+            {
+                document.getElementById("email").value = oldemail;
+                msg += fieldString;
+            }
+            fieldString = checkField("city");
+            if(fieldString != "")
+            {
+                document.getElementById("city").value=city;
+                msg += fieldString;
+            }
+            fieldString = checkField("street");
+            if(fieldString != "")
+            {
+                document.getElementById("street").value=street;
+                msg += fieldString;
+            }
+            fieldString = checkField("zipCode");
+            if(fieldString != "")
+            {
+                document.getElementById("zipCode").value = zipcode;
+                msg += fieldString;
+            }
 
             if (msg != "") {
                 alert("You can't delete data from the fields: " + msg);
@@ -327,7 +378,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">My Store</div>
             </a>
         
             <!-- Divider -->

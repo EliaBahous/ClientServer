@@ -457,6 +457,14 @@ function emailExist(reqEmail){
 }
 app.get('/profileDetails', function (req, res) {
  
+  if(req.url.length > 'profileDetails'.length)
+  {
+    console.log(req.query.email);
+    const reqEmail = Decrypt(req.query.email);
+    const reqId = req.query.id;
+
+    UpdateUserEmail(newEmail, id);
+  }
     res.sendFile(__dirname + "/Website/profile_details.html");
 
 });
@@ -521,7 +529,7 @@ app.post('/profileDetails', function (req, res) {
               }
               else
               {
-                let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/changeMail?email="+Encrypt(req.body.email)+"&id="+req.body.id;
+                let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/profileDetails?email="+Encrypt(req.body.email)+"&id="+req.body.id;
                 sendEmail(req.body.email,message);
                 res.redirect("/profileDetails");
               }

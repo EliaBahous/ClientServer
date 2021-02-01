@@ -15,7 +15,7 @@ const connectionStringHeroku='postgres://uubzjqksqoflsl:9ce6707d7298107631ecd731
 var http = require('http');
 var fs = require('fs');
 //matih
-const client = new Client(connectionString);
+const client = new Client(connectionStringHeroku);
 client
   .connect()
   .then(() => console.log('connected'))

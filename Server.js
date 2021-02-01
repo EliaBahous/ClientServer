@@ -457,14 +457,14 @@ function emailExist(reqEmail){
 }
 app.get('/profileDetails', function (req, res) {
  
-  // if(req.query.email)
-  // {
+   if(req.query.email)
+   {
   //   console.log(req.query.email);
   //   const reqEmail = Decrypt(req.query.email);
   //   const reqId = req.query.id;
 
   //   UpdateUserEmail(newEmail, id);
-  // }
+  }
     res.sendFile(__dirname + "/Website/profile_details.html");
 
 });

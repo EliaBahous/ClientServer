@@ -457,19 +457,8 @@ function emailExist(reqEmail){
 }
 app.get('/profileDetails', function (req, res) {
  
-   if(req.query.email)
-   {
-    console.log(req.query.email);
-    const reqEmail = Decrypt(req.query.email);
-    const reqId = req.query.id;
-
-    UpdateUserEmail(reqEmail, reqId);
-    res.redirect("/profileDetails");
-
-  }
-  else{
+  
     res.sendFile(__dirname + "/Website/profile_details.html");
-  }
 
 });
 
@@ -480,9 +469,11 @@ app.get('/changeMail',function(req,res){
   const reqEmail = Decrypt(req.query.email);
   const reqId = req.query.id;
 
-  UpdateUserEmail(newEmail, id);
+  UpdateUserEmail(reqEmail, reqId);
 
-  res.sendFile(__dirname + "/Website/profile_details.html");
+  res.redirect("/profileDetails");
+
+  // res.sendFile(__dirname + "/Website/profile_details.html");
 
 });
 
@@ -533,7 +524,7 @@ app.post('/profileDetails', function (req, res) {
               }
               else
               {
-                let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/profileDetails?id="+req.body.id+"&email="+Encrypt(req.body.email);
+                let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/changeMail?id="+req.body.id+"&email="+Encrypt(req.body.email);
                 sendEmail(req.body.email,message);
                 res.redirect("/profileDetails");
               }
@@ -608,7 +599,7 @@ async function UpdateUserPassword(req)
 
 async function UpdateUserEmail(newemail,id)
 {
-  const text = "UPDATE users SET email = $1 WHERE id = $2 ;";
+  const text = "UPDATE users SET email = $1::text WHERE id = $2;";
    const values = [newemail,id];
   const result = await client.query(text,values);
   console.log("\n\nUpdate Email!!!!!\n\n");

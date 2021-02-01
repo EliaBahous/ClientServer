@@ -529,7 +529,7 @@ app.post('/profileDetails', function (req, res) {
               }
               else
               {
-                let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/profileDetails?email="+Encrypt(req.body.email)+"&id="+req.body.id;
+                let message = "Confirm email in the link:  https://eliabahous.herokuapp.com/profileDetails?id="+req.body.id+"&email="+Encrypt(req.body.email);
                 sendEmail(req.body.email,message);
                 res.redirect("/profileDetails");
               }
